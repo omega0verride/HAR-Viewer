@@ -116,4 +116,4 @@ Wraps the array in an object with an optional base path for body files:
 
 ## License
 
-MIT
+[AGPL-3.0](LICENSE)
