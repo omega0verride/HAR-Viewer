@@ -129,13 +129,13 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 
 ## File Structure
 ```
-C:\dev\CData-LogParser\HttpVisualizer\
+./
   index.html   - Single file containing all HTML, CSS, JS
   AGENTS.md    - This file
 ```
 
 ## Testing
-- HAR test file: `C:\temp\logparser\azal.al.har` (contains image responses)
+- HAR test file: `./samples/www.softwareishard.com.har` (contains image responses)
 - Image mimeTypes tested: image/jpeg, image/png
 - Verify: RAW shows base64 string, Image renders correctly, JSON/XML parse properly
 
