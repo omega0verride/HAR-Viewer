@@ -127,6 +127,11 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 - Header uses `position: sticky; top: 0; z-index: 10;` to stay on top
 - Must have `background` set on header for it to cover content when scrolling
 
+## JSON Format Fields
+- **Required**: `id`, `uri`, `method`, `statusCode`, `startRequestTimestamp`, `beginResponseTimestamp`, `endResponseTimestamp`, `threadId`
+- **Additional**: `statusMessage`, `requestHeaders`, `responseHeaders`, `requestBodyPath`, `responseBodyPath`, `requestBodyChunks[]`, `responseBodyChunks[]`
+- **Path vs Chunks**: `requestBodyPath`/`responseBodyPath` and `requestBodyChunks[]`/`responseBodyChunks[]` are interchangeable. Chunks contain the actual content inline; paths are links to external files (to save memory). When paths are used, `requests_data_path` in the object format provides the base directory.
+
 ## File Structure
 ```
 ./

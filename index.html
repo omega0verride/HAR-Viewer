@@ -975,13 +975,25 @@
     "uri": "http://localhost:3000/api/users",
     "method": "GET",
     "statusCode": 200,
+    "statusMessage": "OK",
     "startRequestTimestamp": 1704067200000,
     "beginResponseTimestamp": 1704067200150,
     "endResponseTimestamp": 1704067200200,
-    "threadId": "main"
+    "threadId": "main",
+    "requestHeaders": "Content-Type: application/json\nAuthorization: Bearer ...",
+    "responseHeaders": "Content-Type: application/json\nContent-Length: 512",
+    "requestBodyChunks": ["{ \"name\": \"Alice\" }"],
+    "responseBodyChunks": ["{ \"id\": 1, \"name\": \"Alice\" }"],
+    "requestBodyPath": "req_body_1.json",
+    "responseBodyPath": "res_body_1.json"
   },
   ...
 ]</pre>
+                    <div style="color:#666;font-size:11px;margin-top:6px;">
+                        <strong style="color:#888;">Note:</strong>
+                        <strong>requestBodyPath</strong>/<strong>responseBodyPath</strong> and <strong>requestBodyChunks[]</strong>/<strong>responseBodyChunks[]</strong> are interchangeable.
+                        Chunks contain the actual content inline; paths are links to external files (to save memory).
+                    </div>
                 </div>
                 
                 <div style="margin-bottom: 20px;">
@@ -993,11 +1005,6 @@
     ...
   ]
 }</pre>
-
-                    <div style="color:#666;font-size:11px;">
-                        <strong style="color:#888;">Optional JSON fields:</strong><br>
-                        requestHeaders, responseHeaders, requestBodyPath, responseBodyPath, requestBodyChunks[], responseBodyChunks[], statusMessage
-                    </div>
                 </div>
             </div>
         </div>
