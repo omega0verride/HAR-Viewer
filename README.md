@@ -1,6 +1,10 @@
-# HTTP-Waterfall
-
-A single-file HTTP request timeline visualizer. Drop in a HAR or JSON file and get an interactive waterfall chart of your HTTP traffic — no server, no dependencies, no install.
+<p align="center">
+  <img src="icon.svg" width="120" height="120" alt="HTTP-Waterfall">
+</p>
+<h1 align="center">HTTP-Waterfall</h1>
+<p align="center">
+  A single-file HTTP request timeline visualizer. Drop in a HAR or JSON file and get an interactive waterfall chart of your HTTP traffic — no server, no dependencies, no install.
+</p>
 
 <!-- TODO: uncomment when deployed
 ## Try It Online
