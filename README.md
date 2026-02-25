@@ -2,6 +2,9 @@
   <img src="icon.svg" width="120" height="120" alt="HTTP-Waterfall">
 </p>
 <h1 align="center">HTTP-Waterfall</h1>
+
+> **Disclaimer:** This project is vibe coded. It works, but may contain questionable choices.
+
 <p align="center">
   A single-file HTTP request timeline visualizer. Drop in a HAR or JSON file and get an interactive waterfall chart of your HTTP traffic — no server, no dependencies, no install.
 </p>
@@ -19,6 +22,8 @@
 3. Drop a HAR or JSON file onto the page (or click to browse)
 
 That's it. Everything runs client-side in a single HTML file.
+
+> **Note:** The single-file approach is intentional. No build step, no dependencies, no npm install — just drop the HTML file anywhere and it works. Sometimes the simplest solution is the best one.
 
 ## Features
 
