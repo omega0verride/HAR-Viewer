@@ -1406,6 +1406,14 @@
             contentEl.scrollTop = 0;
             contentEl.scrollLeft = 0;
             
+            // Apply wrap setting
+            const wrapCheckbox = document.getElementById('wrapToggle');
+            if (wrapCheckbox.checked) {
+                contentEl.className = 'body-wrap';
+            } else {
+                contentEl.className = 'body-no-wrap';
+            }
+            
             // Remove image container if exists
             const imgContainer = document.getElementById('bodyImageContainer');
             if (imgContainer) imgContainer.remove();
@@ -1611,9 +1619,11 @@
             const contentEl = document.getElementById(uniqueId + '_content');
             
             const format = btn.dataset.format;
+            const wrapCheckbox = document.getElementById(uniqueId + '_wrap');
+            const isWrapped = wrapCheckbox && wrapCheckbox.checked;
             
-            contentEl.className = 'body-no-wrap';
-            contentEl.style.whiteSpace = 'pre';
+            contentEl.className = isWrapped ? 'body-wrap' : 'body-no-wrap';
+            contentEl.style.whiteSpace = isWrapped ? 'pre-wrap' : 'pre';
             contentEl.style.display = 'block';
             contentEl.style.backgroundColor = '#252525';
             contentEl.style.color = '#ccc';
