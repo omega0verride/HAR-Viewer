@@ -1371,8 +1371,8 @@
             currentBodyEncoding = encoding;
             currentBodyOriginal = originalBody;
             
-            document.querySelectorAll('.format-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.format-btn[data-format="raw"]').classList.add('active');
+            document.querySelectorAll('#bodyModal .format-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('#bodyModal .format-btn[data-format="raw"]').classList.add('active');
             
             const mimeInfo = mimeType ? ` (${mimeType})` : '';
             document.getElementById('bodyModalTitle').textContent = (type === 'request' ? 'Request' : 'Response') + ' Body - ID: ' + id + mimeInfo;
@@ -1394,8 +1394,8 @@
         
         function setBodyFormat(format) {
             currentBodyFormat = format;
-            document.querySelectorAll('.format-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.format-btn[data-format="${format}"]`).classList.add('active');
+            document.querySelectorAll('#bodyModal .format-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`#bodyModal .format-btn[data-format="${format}"]`).classList.add('active');
             
             const contentEl = document.getElementById('bodyContent');
             
@@ -1611,6 +1611,7 @@
             const contentEl = document.getElementById(uniqueId + '_content');
             
             const format = btn.dataset.format;
+            
             contentEl.className = 'body-no-wrap';
             contentEl.style.whiteSpace = 'pre';
             contentEl.style.display = 'block';
