@@ -33,6 +33,7 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 - **Critical**: Detects base64 encoding via `res.content.encoding === 'base64'`
 - Stores `responseMimeType`, `responseEncoding`, and `responseOriginalBody` for body viewing
 - Falls back: if HAR has no explicit encoding but mimeType starts with `image/`, assumes base64
+- **Exception**: `image/svg+xml` is NOT treated as base64 (it's text/XML, not binary)
 
 ### 3. Body Viewer (Popup Dialog)
 - Slides from right, 700px wide
@@ -68,7 +69,8 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 
 ### 2. Image Rendering
 - HAR stores binary images as base64 in `content.text` with `encoding: "base64"`
-- Image viewer uses `data:image/[type];base64,[data]` format
+- Image viewer uses `data:image/[type];base64,[data]` format for binary images
+- **SVG Exception**: Uses `data:image/svg+xml;utf8,[URL-encoded-content]` instead of base64
 - Three sources for base64 (in order):
   1. `currentBodyOriginal` - stored separately during HAR conversion
   2. `currentBodyContent` - if `encoding === 'base64'`
@@ -79,10 +81,10 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 - Added "Type" column that detects content type from `Content-Type` response header
 - `getTypeFromContentType()` function maps MIME types to short labels:
   - `application/json` → JSON
-  - `application/xml`, `text/xml` → XML
+  - `image/*` → IMG (including SVG)
+  - `application/xml`, `text/xml` → XML (but NOT image/svg+xml)
   - `text/html` → HTML
   - `text/*` → TEXT
-  - `image/*` → IMG
   - `application/javascript` → JS
   - `application/css` → CSS
   - `font/*` → FONT
@@ -92,6 +94,7 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
   - Otherwise: extracts subtype (first 8 chars)
 - Falls back to extracting from `responseMimeType` if no Content-Type header
 - Type stored in `req.type` field
+- **Important**: `image/` check must come before `xml` check to correctly classify `image/svg+xml` as IMG
 
 ### 4. HEX View Alignment
 - Each row: 16 bytes × 3 chars = 48 chars for hex

@@ -1165,11 +1165,11 @@
             if (!contentType) return '';
             const ct = contentType.toLowerCase();
             if (ct.includes('json')) return 'JSON';
-            if (ct.includes('xml')) return 'XML';
+            if (ct.includes('image/')) return 'IMG';
+            if (ct.includes('xml') && !ct.includes('image/')) return 'XML';
             if (ct.includes('html')) return 'HTML';
             if (ct.includes('javascript') || ct.includes('application/x-javascript')) return 'JS';
             if (ct.includes('text/css')) return 'CSS';
-            if (ct.includes('image/')) return 'IMG';
             if (ct.includes('font')) return 'FONT';
             if (ct.includes('pdf')) return 'PDF';
             if (ct.includes('zip') || ct.includes('gzip') || ct.includes('tar') || ct.includes('rar')) return 'ARCH';
@@ -1249,7 +1249,7 @@
                 // Check for encoding: "base64" OR if mimeType is image, assume base64
                 const explicitEncoding = res.content?.encoding;
                 const mimeType = (res.content?.mimeType || '').toLowerCase();
-                const isBase64 = explicitEncoding === 'base64' || mimeType.startsWith('image/');
+                const isBase64 = explicitEncoding === 'base64' || (mimeType.startsWith('image/') && mimeType !== 'image/svg+xml');
                 let originalBodyContent = null;
                 
                 if (res.content && res.content.text) {
@@ -1465,6 +1465,13 @@
                             imageType = 'image/webp';
                         }
                         
+                        // SVG is text, not binary - use URL-encoded content
+                        if (mimeType.includes('svg')) {
+                            const encoded = encodeURIComponent(currentBodyContent);
+                            imgContainer.innerHTML = `<img src="data:${imageType};utf8,${encoded}" style="max-width:100%;max-height:100%;">`;
+                            break;
+                        }
+                        
                         // Try to use content directly if it looks like base64
                         let base64 = currentBodyContent.trim();
                         if (!/^[A-Za-z0-9+/=]+$/.test(base64) || base64.length < 100) {
@@ -1589,7 +1596,12 @@
                 else if (mt.includes('webp')) imageType = 'image/webp';
                 else if (mt.includes('svg')) imageType = 'image/svg+xml';
                 
-                contentEl.innerHTML = `<img src="data:${imageType};base64,${base64}" style="max-width:100%;max-height:100%;">`;
+                // SVG is text, not binary - use URL-encoded content
+                if (mt.includes('svg')) {
+                    contentEl.innerHTML = `<img src="data:${imageType};utf8,${encodeURIComponent(raw)}" style="max-width:100%;max-height:100%;">`;
+                } else {
+                    contentEl.innerHTML = `<img src="data:${imageType};base64,${base64}" style="max-width:100%;max-height:100%;">`;
+                }
             } else if (format === 'hex') {
                 let hex = '', ascii = '';
                 for (let i = 0; i < raw.length; i++) {
