@@ -215,7 +215,7 @@
             fill: #e0e0e0;
         }
         
-        .main-content { height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding: 0; margin: 0; }
+        .main-content { height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding: 0; margin: 0; position: relative; }
         
         #content { display: none; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
         #content.active { display: flex; flex: 1; min-height: 0; }
@@ -725,7 +725,7 @@
         .stats-item-value.clickable:hover { color: #80deea; text-decoration: underline; }
 
         .headers-modal {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center;
         }
         .headers-modal.active { display: flex; }
