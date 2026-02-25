@@ -39,11 +39,11 @@ That's it. Everything runs client-side in a single HTML file.
 
 | Action | Shortcut |
 |---|---|
-| Select row | Click |
-| Toggle selection | Ctrl+Click |
-| Range select | Shift+Click |
-| Select all | Ctrl+A |
-| Horizontal scroll | Shift+Scroll |
+| Select row | `Click` |
+| Toggle selection | `Ctrl`+`Click` |
+| Range select | `Shift`+`Click` |
+| Select all | `Ctrl`+`A` |
+| Horizontal scroll | `Shift`+`Scroll` |
 | Zoom in/out | `+` / `-` |
 | Open request details | Click request ID |
 
