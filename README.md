@@ -64,11 +64,15 @@ That's it. Everything runs client-side in a single HTML file.
 
 Standard `.har` files as exported from browser DevTools. See the [HAR 1.2 spec](http://www.softwareishard.com/blog/har-12-spec/).
 
+See the [`samples/custom/`](samples/har/) folder for example JSON files.
+
 ### 2. Custom JSON format
 
 The custom JSON format is designed to be lightweight and easy to generate and parse, with support for both inline content and external file references.  
 
 It is simplier than HAR allowing for easier generation and integration with non-standard tools that do not export HAR (you do not have to implement the full HAR spec.).  
+
+See the [`samples/custom/`](samples/custom/) folder for example JSON files.
 
 A JSON array of request objects:
 
