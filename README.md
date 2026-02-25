@@ -35,6 +35,12 @@ That's it. Everything runs client-side in a single HTML file.
 - **Zero dependencies** — single HTML file, no build step, no server required
 - **Dark theme** — easy on the eyes
 
+## Screenshots
+
+![Timeline overview](screenshots/1.png)
+![Request details](screenshots/2.png)
+![Stats](screenshots/3.png)
+
 ## Keyboard & Mouse Shortcuts
 
 | Action | Shortcut |
