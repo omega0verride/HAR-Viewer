@@ -1206,9 +1206,12 @@
                 } catch (err) {
                     showError('Failed to parse file: ' + err.message);
                 }
+                // Clear input so same file can be re-selected
+                event.target.value = '';
             };
             reader.onerror = function() {
                 showError('Failed to read file');
+                event.target.value = '';
             };
             reader.readAsText(file);
         }

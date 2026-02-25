@@ -138,6 +138,7 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 - When navigating back/forward to the page, browser bfcache can leave file inputs in an inconsistent state where selecting a file doesn't trigger the change event properly
 - Fix: Added `pageshow` event listener that clears both `fileInput` and `dropZoneFileInput` values when page is restored from bfcache
 - This ensures file selection works correctly after back/forward navigation
+- **Additional fix**: File inputs are now cleared after each file selection (success or error), allowing the same file to be re-selected after parse errors
 
 ## JSON Format Fields
 - **Required**: `id`, `uri`, `method`, `statusCode`, `startRequestTimestamp`, `beginResponseTimestamp`, `endResponseTimestamp`, `threadId`
