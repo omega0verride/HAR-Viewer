@@ -64,7 +64,7 @@ That's it. Everything runs client-side in a single HTML file.
 
 Standard `.har` files as exported from browser DevTools. See the [HAR 1.2 spec](http://www.softwareishard.com/blog/har-12-spec/).
 
-See the [`samples/custom/`](samples/har/) folder for example JSON files.
+See the [`samples/har/`](samples/har/) folder for example HAR files.
 
 ### 2. Custom JSON format
 
