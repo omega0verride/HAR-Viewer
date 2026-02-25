@@ -1180,6 +1180,13 @@
         
         document.getElementById('fileInput').addEventListener('change', handleFileSelect);
         
+        window.addEventListener('pageshow', function(event) {
+            const fileInput = document.getElementById('fileInput');
+            const dropZoneFileInput = document.getElementById('dropZoneFileInput');
+            if (fileInput) fileInput.value = '';
+            if (dropZoneFileInput) dropZoneFileInput.value = '';
+        });
+        
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;

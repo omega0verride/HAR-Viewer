@@ -129,6 +129,11 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 - Header uses `position: sticky; top: 0; z-index: 10;` to stay on top
 - Must have `background` set on header for it to cover content when scrolling
 
+### 11. Back-Forward Cache (bfcache) and File Inputs
+- When navigating back/forward to the page, browser bfcache can leave file inputs in an inconsistent state where selecting a file doesn't trigger the change event properly
+- Fix: Added `pageshow` event listener that clears both `fileInput` and `dropZoneFileInput` values when page is restored from bfcache
+- This ensures file selection works correctly after back/forward navigation
+
 ## JSON Format Fields
 - **Required**: `id`, `uri`, `method`, `statusCode`, `startRequestTimestamp`, `beginResponseTimestamp`, `endResponseTimestamp`, `threadId`
 - **Additional**: `statusMessage`, `requestHeaders`, `responseHeaders`, `requestBodyPath`, `responseBodyPath`, `requestBodyChunks[]`, `responseBodyChunks[]`
