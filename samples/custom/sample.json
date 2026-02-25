@@ -293,7 +293,7 @@
     ]
   },
   {
-    "id": 13,
+    "id": 14,
     "uri": "https://myshop.com/styles/main.css",
     "method": "GET",
     "statusCode": 200,
@@ -318,7 +318,31 @@
     ]
   },
   {
-    "id": 14,
+    "id": 13,
+    "uri": "https://myshop.com/",
+    "method": "GET",
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "startRequestTimestamp": 1704067207500,
+    "beginResponseTimestamp": 1704067207550,
+    "endResponseTimestamp": 1704067207900,
+    "threadId": "main",
+    "requestHeaders": {
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "Accept-Language": "en-US,en;q=0.5"
+    },
+    "responseHeaders": {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-cache",
+      "X-Request-Id": "req_8a7b6c5d4e"
+    },
+    "responseBodyChunks": [
+      "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>MyShop - Premium Electronics</title><link rel=\"stylesheet\" href=\"/styles/main.css\"></head><body><header><div class=\"logo\">MyShop</div><nav><a href=\"/\">Home</a><a href=\"/products\">Products</a><a href=\"/cart\">Cart</a><a href=\"/account\">Account</a></nav></header><main><section class=\"hero\"><h1>Welcome to MyShop</h1><p>Your one-stop shop for premium electronics and accessories</p><a href=\"/products\" class=\"btn\">Shop Now</a></section><section class=\"featured\"><h2>Featured Products</h2><div class=\"product-grid\"><div class=\"product-card\"><img src=\"/images/products/headphones_1.jpg\" alt=\"Headphones\"><h3>Wireless Headphones</h3><p class=\"price\">$79.99</p></div><div class=\"product-card\"><img src=\"/images/products/watch.jpg\" alt=\"Smart Watch\"><h3>Smart Watch</h3><p class=\"price\">$299.99</p></div></div></section></main><footer><p>&copy; 2024 MyShop. All rights reserved.</p></footer><script src=\"/scripts/app.js\"></script></body></html>"
+    ]
+  },
+  {
+    "id": 15,
     "uri": "https://myshop.com/scripts/app.js",
     "method": "GET",
     "statusCode": 200,
@@ -343,7 +367,7 @@
     ]
   },
   {
-    "id": 15,
+    "id": 16,
     "uri": "https://api.myshop.com/v1/search?q=headphones",
     "method": "GET",
     "statusCode": 200,
@@ -366,7 +390,7 @@
     ]
   },
   {
-    "id": 16,
+    "id": 17,
     "uri": "https://api.myshop.com/v1/wishlist",
     "method": "GET",
     "statusCode": 200,
@@ -389,7 +413,7 @@
     ]
   },
   {
-    "id": 17,
+    "id": 18,
     "uri": "https://api.myshop.com/v1/categories",
     "method": "GET",
     "statusCode": 200,
@@ -411,7 +435,7 @@
     ]
   },
   {
-    "id": 18,
+    "id": 19,
     "uri": "https://api.myshop.com/v1/users/me/settings",
     "method": "PUT",
     "statusCode": 200,
@@ -437,7 +461,7 @@
     ]
   },
   {
-    "id": 19,
+    "id": 20,
     "uri": "https://api.myshop.com/v1/messages/support",
     "method": "GET",
     "statusCode": 200,
@@ -459,7 +483,7 @@
     ]
   },
   {
-    "id": 20,
+    "id": 21,
     "uri": "https://api.myshop.com/v1/auth/logout",
     "method": "POST",
     "statusCode": 200,
