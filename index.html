@@ -1430,7 +1430,7 @@
                         if (xmlDoc.getElementsByTagName('parsererror').length === 0) {
                             const serializer = new XMLSerializer();
                             let xmlStr = serializer.serializeToString(xmlDoc);
-                            // Pretty print XML with indentation
+                            // Pretty print XML with proper indentation
                             let formatted = '';
                             let indent = 0;
                             xmlStr = xmlStr.replace(/(>)(<)(\/*)/g, '$1\n$2$3');
@@ -1438,11 +1438,18 @@
                             for (const line of lines) {
                                 let trimmed = line.trim();
                                 if (!trimmed) continue;
-                                if (trimmed.startsWith('</')) {
+                                // Check if this line is ONLY a closing tag (not an opening tag with content)
+                                const isClosingOnly = trimmed.startsWith('</');
+                                // Check if this line is ONLY an opening tag (not containing both open and close)
+                                const isOpeningOnly = trimmed.startsWith('<') && !trimmed.includes('</') && !trimmed.endsWith('/>');
+                                // Check if self-closing
+                                const isSelfClosing = trimmed.endsWith('/>');
+                                
+                                if (isClosingOnly) {
                                     indent = Math.max(0, indent - 1);
                                 }
                                 formatted += '  '.repeat(indent) + trimmed + '\n';
-                                if (trimmed.startsWith('<') && !trimmed.startsWith('</') && !trimmed.startsWith('<?') && !trimmed.startsWith('<!') && !trimmed.endsWith('/>')) {
+                                if (isOpeningOnly && !isSelfClosing && !trimmed.startsWith('<?') && !trimmed.startsWith('<!')) {
                                     indent++;
                                 }
                             }
@@ -1607,6 +1614,8 @@
             contentEl.className = 'body-no-wrap';
             contentEl.style.whiteSpace = 'pre';
             contentEl.style.display = 'block';
+            contentEl.style.backgroundColor = '#252525';
+            contentEl.style.color = '#ccc';
             
             if (format === 'image') {
                 contentEl.innerHTML = '';
@@ -1659,12 +1668,32 @@
                 const doc = parser.parseFromString(raw, 'text/xml');
                 if (doc.getElementsByTagName('parsererror').length === 0) {
                     const serializer = new XMLSerializer();
-                    contentEl.textContent = serializer.serializeToString(doc);
+                    let xmlStr = serializer.serializeToString(doc);
+                    let formatted = '';
+                    let indent = 0;
+                    xmlStr = xmlStr.replace(/(>)(<)(\/*)/g, '$1\n$2$3');
+                    const lines = xmlStr.split('\n');
+                    for (const line of lines) {
+                        let trimmed = line.trim();
+                        if (!trimmed) continue;
+                        const isClosingOnly = trimmed.startsWith('</');
+                        const isOpeningOnly = trimmed.startsWith('<') && !trimmed.includes('</') && !trimmed.endsWith('/>');
+                        const isSelfClosing = trimmed.endsWith('/>');
+                        
+                        if (isClosingOnly) {
+                            indent = Math.max(0, indent - 1);
+                        }
+                        formatted += '  '.repeat(indent) + trimmed + '\n';
+                        if (isOpeningOnly && !isSelfClosing && !trimmed.startsWith('<?') && !trimmed.startsWith('<!')) {
+                            indent++;
+                        }
+                    }
+                    contentEl.textContent = formatted.trim();
                 } else { contentEl.textContent = raw; }
             } else if (format === 'html') {
-                const doc = document.implementation.createHTMLDocument('');
-                doc.body.innerHTML = raw;
-                contentEl.textContent = doc.body.innerHTML;
+                contentEl.style.backgroundColor = '#fff';
+                contentEl.style.color = '#000';
+                contentEl.innerHTML = raw;
             } else {
                 contentEl.textContent = original || raw;
             }

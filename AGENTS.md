@@ -184,3 +184,15 @@ Use event delegation instead of inline onclick handlers where possible. For clic
 - `setupResizeHandler()` - sets up window resize listener for dynamic tick updates
 - `zoomToFit()` - uses binary search to find optimal zoom level that fits timeline to visible width (works zooming in or out)
 - `sliderToWidth(value)` / `widthToSlider(width)` - logarithmic conversion between slider value (0-100) and timeline width (500-2M px)
+
+### CRITICAL: Dual Body Viewers Must Be Updated Together
+There are TWO body viewers in the app:
+1. **Body Popup Dialog** - `setBodyFormat()` function (around line 1395)
+2. **Detail Panel (inline)** - `setDetailBodyFormat()` function (around line 1600)
+
+Both viewers have the same format buttons (RAW, JSON, XML, HTML, Image, HEX). When updating format logic:
+- ALWAYS update BOTH functions simultaneously
+- The HTML tab should render HTML (use innerHTML, white background)
+- The XML tab should pretty-print with proper indentation
+- The Image tab should render the actual image
+- Style resets (background, color, display) must be applied in both viewers
