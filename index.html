@@ -956,7 +956,7 @@
             <div class="instructions">
                 <div class="instructions-title">Supported Formats</div>
                 <p style="color:#888;font-size:12px;margin-bottom:15px;">
-                    Upload a JSON file (array or object) or a HAR (HTTP Archive) file.
+                    Upload a HAR (HTTP Archive) file or our custom format JSON file.
                 </p>
                 
                 <div style="margin-bottom: 20px;">
@@ -964,11 +964,19 @@
 
                     <div style="margin-bottom: 20px;">
                         <div style="color:#aaa;font-size:16px;margin-bottom:5px;">1. HAR format:
-                            <a href="http://www.softwareishard.com/blog/har-12-spec/" target="_blank" style="color:#4fc3f7;font-size:11px;margin-left:10px;">Spec</a>
+                            <a href="http://www.softwareishard.com/blog/har-12-spec/" target="_blank" rel="noopener" style="color:#4fc3f7;font-size:11px;margin-left:10px;">HAR 1.2 spec</a>
                             <a href="https://toolbox.googleapps.com/apps/har_analyzer/" target="_blank" style="color:#4fc3f7;font-size:11px;margin-left:10px;">Analyzer</a>
                         </div>
                     </div>
-                    <div style="color:#aaa;font-size:16px;margin-bottom:5px;">2. JSON Array format:</div>
+                    <div style="color:#aaa;font-size:16px;margin-bottom:5px;">2. Custom JOSN format:
+                        <a href="https://github.com/omega0verride/HTTP-waterfall?tab=readme-ov-file#json-format" target="_blank" rel="noopener" style="color:#4fc3f7;font-size:11px;margin-left:10px;">Spec on GitHub</a>
+                        <a href="https://github.com/omega0verride/HTTP-waterfall/tree/main/samples/" target="_blank" rel="noopener" style="color:#4fc3f7;font-size:11px;margin-left:10px;">Samples</a>
+                    </div>
+                    <div style="color:#666;font-size:11px;margin-top:6px;">
+                        <p>The custom JSON format is designed to be lightweight and easy to generate and parse, with support for both inline content and external file references.</p>
+                        <p>It is simplier than HAR allowing for easier generation and integration with non-standard tools that do not export HAR (you do not have to implement the full HAR spec.).</p>
+                    </div>
+                    <div style="color:#aaa;font-size:16px;margin-bottom:5px;"></div>
                     <pre style="background:#1e1e1e;padding:12px;border-radius:6px;overflow-x:auto;font-size:11px;color:#ccc;">[
   {
     "id": 1,
@@ -994,17 +1002,6 @@
                         <strong>requestBodyPath</strong>/<strong>responseBodyPath</strong> and <strong>requestBodyChunks[]</strong>/<strong>responseBodyChunks[]</strong> are interchangeable.
                         Chunks contain the actual content inline; paths are links to external files (to save memory).
                     </div>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <div style="color:#aaa;font-size:16px;margin-bottom:5px;">3. JSON Object format:</div>
-                    <pre style="background:#1e1e1e;padding:12px;border-radius:6px;overflow-x:auto;font-size:11px;color:#ccc;">{
-  "requests_data_path": "C:/data/connections/",
-  "requests": [
-    { "id": 1, "uri": "http://localhost:3000/api/users", ... },
-    ...
-  ]
-}</pre>
                 </div>
             </div>
         </div>
