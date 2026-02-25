@@ -9,11 +9,11 @@
   A single-file HTTP request timeline visualizer. Drop in a HAR or JSON file and get an interactive waterfall chart of your HTTP traffic — no server, no dependencies, no install.
 </p>
 
-<!-- TODO: uncomment when deployed
-## Try It Online
-
-**[Launch HTTP-Waterfall](https://your-deployed-url.example.com)** — no install required, runs entirely in your browser.
--->
+<p align="center" style="font-size: 1.2em; text-decoration: underline; text-decoration-color: #888;">
+<b>
+<a href="https://harviewer.com/">Try Online 🌐</a>
+</b>
+</p>
 
 ## Quick Start
 
