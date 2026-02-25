@@ -43,6 +43,8 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 - Copy button with "Copied!" feedback
 - Wrap toggle checkbox
 - **Important**: Uses `<textarea>` for text formats (allows cursor navigation), separate `<div>` for images
+- **MIME Type Fallback**: When loading JSON files (not HAR), MIME type is obtained from `responseHeaders['Content-Type']` if `responseMimeType` is not set
+- Both popup body viewer and detail panel use this fallback logic
 
 ### 4. Request Details Panel (Inline)
 - Embedded in detail panel with collapsible sections

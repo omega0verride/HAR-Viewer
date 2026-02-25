@@ -1348,7 +1348,8 @@
             if (!chunks || chunks.length === 0) return;
             
             const content = chunks.join('\n');
-            const mimeType = type === 'response' ? req.responseMimeType : '';
+            const resHeaders = req.responseHeaders || {};
+            const mimeType = type === 'response' ? (req.responseMimeType || resHeaders['Content-Type'] || resHeaders['content-type'] || '') : '';
             const encoding = type === 'response' ? req.responseEncoding : 'text';
             const originalBody = type === 'response' ? req.responseOriginalBody : null;
             showBodyModal(type, content, req.id, mimeType, encoding, originalBody);
@@ -1689,7 +1690,8 @@
             const chunks = bodyType === 'request' ? req.requestBodyChunks : req.responseBodyChunks;
             const bodyPath = bodyType === 'request' ? req.requestBodyPath : req.responseBodyPath;
             const label = bodyType === 'request' ? 'Request' : 'Response';
-            const mimeType = bodyType === 'response' ? (req.responseMimeType || '') : '';
+            const resHeaders = bodyType === 'response' ? (req.responseHeaders || {}) : {};
+            const mimeType = bodyType === 'response' ? (req.responseMimeType || resHeaders['Content-Type'] || resHeaders['content-type'] || '') : '';
             const encoding = bodyType === 'response' ? (req.responseEncoding || 'text') : 'text';
             const originalBody = bodyType === 'response' ? (req.responseOriginalBody || null) : null;
             
