@@ -884,6 +884,11 @@
                     <label>Base URI</label>
                     <input type="text" id="filterBaseUri" placeholder="e.g. http://localhost:3000/" oninput="applyFilter()" style="width: 150px;" title="Strip prefix from URIs in display only">
                 </div>
+                <div class="vertical-separator"></div>
+                <div class="filter-group">
+                    <label>Timezone</label>
+                    <select id="timezoneSelect" onchange="handleTimezoneChange()" style="width: 80px;" title="Select timezone for timestamps"></select>
+                </div>
                 <div class="vertical-separator" style="display: none;"></div>
                 <button class="btn" id="clearFiltersBtn" onclick="clearFilters()" style="padding: 6px 12px; font-size: 12px; display: none;">✕ Clear</button>
             </div>
@@ -1146,6 +1151,110 @@
         let endTime = null;
         let requestsDataPath = null;
         let jsonFileHandle = null;
+        let selectedTimezone = 'local';
+        
+        function populateTimezoneSelect() {
+            const select = document.getElementById('timezoneSelect');
+            const timezones = Intl.supportedValuesOf('timeZone');
+            
+            let options = '<option value="local" selected>Local</option>';
+            options += '<option value="utc">UTC</option>';
+            
+            const offsetMap = new Map();
+            const now = new Date();
+            
+            for (const tz of timezones) {
+                try {
+                    const formatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' });
+                    const parts = formatter.formatToParts(now);
+                    const offsetPart = parts.find(p => p.type === 'timeZoneName')?.value || '';
+                    
+                    const match = offsetPart.match(/GMT([+-]\d+)?/);
+                    let offsetHours = 0;
+                    if (match && match[1]) {
+                        offsetHours = parseInt(match[1]);
+                    } else {
+                        const tzDate = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+                        const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+                        offsetHours = -(tzDate - utcDate) / 3600000;
+                    }
+                    
+                    if (!offsetMap.has(offsetHours)) {
+                        offsetMap.set(offsetHours, []);
+                    }
+                    offsetMap.get(offsetHours).push(tz);
+                } catch (e) {
+                }
+            }
+            
+            const sortedOffsets = Array.from(offsetMap.keys()).sort((a, b) => a - b);
+            
+            for (const offset of sortedOffsets) {
+                const tzs = offsetMap.get(offset);
+                const label = offset === 0 ? 'UTC' : (offset > 0 ? `+${offset}:00` : `${offset}:00`);
+                const sampleTz = tzs[0];
+                options += `<option value="${sampleTz}">${label}</option>`;
+            }
+            
+            select.innerHTML = options;
+            selectedTimezone = 'local';
+        }
+        
+        function handleTimezoneChange() {
+            selectedTimezone = document.getElementById('timezoneSelect').value;
+            renderTimeline();
+        }
+        
+        function formatTimestamp(timestamp, format = 'full') {
+            const dt = new Date(timestamp);
+            
+            let localTime;
+            if (selectedTimezone === 'utc') {
+                localTime = new Date(dt.getTime() + (dt.getTimezoneOffset() * 60000));
+            } else if (selectedTimezone === 'local' || selectedTimezone === Intl.DateTimeFormat().resolvedOptions().timeZone) {
+                localTime = dt;
+            } else {
+                try {
+                    const formatter = new Intl.DateTimeFormat('en-US', {
+                        timeZone: selectedTimezone,
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        hour12: false
+                    });
+                    const parts = formatter.formatToParts(dt);
+                    const getPart = (type) => parts.find(p => p.type === type)?.value || '00';
+                    localTime = new Date(
+                        parseInt(getPart('year')),
+                        parseInt(getPart('month')) - 1,
+                        parseInt(getPart('day')),
+                        parseInt(getPart('hour')),
+                        parseInt(getPart('minute')),
+                        parseInt(getPart('second')),
+                        dt.getMilliseconds()
+                    );
+                } catch (e) {
+                    localTime = dt;
+                }
+            }
+            
+            const day = String(localTime.getDate()).padStart(2, '0');
+            const month = String(localTime.getMonth() + 1).padStart(2, '0');
+            const hours = String(localTime.getHours()).padStart(2, '0');
+            const mins = String(localTime.getMinutes()).padStart(2, '0');
+            const secs = String(localTime.getSeconds()).padStart(2, '0');
+            const ms = String(localTime.getMilliseconds()).padStart(3, '0');
+            
+            if (format === 'short') {
+                return `${hours}:${mins}:${secs}`;
+            } else if (format === 'table') {
+                return `${day}/${month} ${hours}:${mins}:${secs}.${ms}`;
+            } else if (format === 'header') {
+                return `${day}T${hours}:${mins}:${secs}.${ms}`;
+            } else if (format === 'detail') {
+                return `${localTime.getFullYear()}-${month}-${day} ${hours}:${mins}:${secs}.${ms}`;
+            }
+            return `${day}T${hours}:${mins}:${secs}.${ms}`;
+        }
         
         const THREAD_COLORS = [
             '#e53935', '#1e88e5', '#43a047', '#fb8c00', '#8e24aa',
@@ -1903,16 +2012,8 @@
             
             allRequests = requests.map(req => {
                 const startTs = req.startRequestTimestamp;
-                const dt = new Date(startTs);
-                // Format: DD/MM HH:mm:ss.SSS (24h format with date)
-                const day = String(dt.getDate()).padStart(2, '0');
-                const month = String(dt.getMonth() + 1).padStart(2, '0');
-                const hours = String(dt.getHours()).padStart(2, '0');
-                const mins = String(dt.getMinutes()).padStart(2, '0');
-                const secs = String(dt.getSeconds()).padStart(2, '0');
-                const ms = String(dt.getMilliseconds()).padStart(3, '0');
-                const fullDt = `${day}/${month} ${hours}:${mins}:${secs}.${ms}`;
-                const timeOnly = `${hours}:${mins}:${secs}`;
+                const fullDt = formatTimestamp(startTs, 'table');
+                const timeOnly = formatTimestamp(startTs, 'short');
                 
                 let end = req.endResponseTimestamp || req.beginResponseTimestamp;
                 if (!end || end === 0) end = startTs + 10000;
@@ -2159,7 +2260,7 @@
                         <td style="text-align: center;">${rowNum}</td>
                         <td style="font-size: 13px; font-weight: 500; cursor: pointer; color: #4fc3f7; text-decoration: underline;">${req.id}</td>
                         <td><span class="thread-badge" style="background:${threadColor};font-size:10px;padding:2px 6px;" title="${threadTitle}">${threadLabel}</span></td>
-                        <td style="font-size: 12px; color: #ccc;">${req.fullDt}</td>
+                        <td style="font-size: 12px; color: #ccc;">${formatTimestamp(req.startTs, 'table')}</td>
                         <td style="text-align: center;"><span class="endpoint-method ${req.methodClass}" style="font-size: 11px; padding: 2px 7px;">${req.method}</span></td>
                         <td class="duration-text" style="font-size: 12px;">${req.durationHuman}</td>
                         <td><span class="status-badge ${req.statusClass}" style="font-size: 12px; padding: 2px 7px;" title="${req.msg}">${req.status}</span></td>
@@ -2220,13 +2321,7 @@
                     startMarker.className = 'measure-marker start';
                     const label = document.createElement('div');
                     label.className = 'measure-marker-label start';
-                    const dt = new Date(startTime);
-                    const day = String(dt.getDate()).padStart(2, '0');
-                    const hours = String(dt.getHours()).padStart(2, '0');
-                    const mins = String(dt.getMinutes()).padStart(2, '0');
-                    const secs = String(dt.getSeconds()).padStart(2, '0');
-                    const ms = String(dt.getMilliseconds()).padStart(3, '0');
-                    label.textContent = `${day}T${hours}:${mins}:${secs}.${ms}`;
+                    label.textContent = formatTimestamp(startTime, 'header');
                     startMarker.appendChild(label);
                     startMarker.style.left = startPx + 'px';
                     startMarker.style.height = '100%';
@@ -2239,13 +2334,7 @@
                     endMarker.className = 'measure-marker end';
                     const label = document.createElement('div');
                     label.className = 'measure-marker-label end';
-                    const dt = new Date(endTime);
-                    const day = String(dt.getDate()).padStart(2, '0');
-                    const hours = String(dt.getHours()).padStart(2, '0');
-                    const mins = String(dt.getMinutes()).padStart(2, '0');
-                    const secs = String(dt.getSeconds()).padStart(2, '0');
-                    const ms = String(dt.getMilliseconds()).padStart(3, '0');
-                    label.textContent = `${day}T${hours}:${mins}:${secs}.${ms}`;
+                    label.textContent = formatTimestamp(endTime, 'header');
                     endMarker.appendChild(label);
                     endMarker.style.left = endPx + 'px';
                     endMarker.style.height = '100%';
@@ -2305,14 +2394,7 @@
             for (let i = 0; i <= tickCount; i++) {
                 const leftPx = (i / tickCount) * effectiveWidth;
                 const time = timeRange.min + (range * i / tickCount);
-                const dt = new Date(time);
-                
-                const day = String(dt.getDate()).padStart(2, '0');
-                const hours = String(dt.getHours()).padStart(2, '0');
-                const mins = String(dt.getMinutes()).padStart(2, '0');
-                const secs = String(dt.getSeconds()).padStart(2, '0');
-                const ms = String(dt.getMilliseconds()).padStart(3, '0');
-                const timeStr = `${day}T${hours}:${mins}:${secs}.${ms}`;
+                const timeStr = formatTimestamp(time, 'header');
                 
                 html += `
                     <div class="timeline-header-tick" style="left: ${leftPx}px;"></div>
@@ -2392,13 +2474,7 @@
                     
                     if (adjustedX >= 0 && adjustedX <= effectiveWidth) {
                         const timestamp = timeRange.min + (adjustedX / effectiveWidth) * range;
-                        const dt = new Date(timestamp);
-                        const day = String(dt.getDate()).padStart(2, '0');
-                        const hours = String(dt.getHours()).padStart(2, '0');
-                        const mins = String(dt.getMinutes()).padStart(2, '0');
-                        const secs = String(dt.getSeconds()).padStart(2, '0');
-                        const ms = String(dt.getMilliseconds()).padStart(3, '0');
-                        const timeStr = `${day}T${hours}:${mins}:${secs}.${ms}`;
+                        const timeStr = formatTimestamp(timestamp, 'header');
 
                         cursorLine.style.display = 'block';
                         cursorLine.style.left = e.clientX + 'px';
@@ -2585,13 +2661,7 @@
         }
         
         function formatTime(timestamp) {
-            const dt = new Date(timestamp);
-            const day = String(dt.getDate()).padStart(2, '0');
-            const hours = String(dt.getHours()).padStart(2, '0');
-            const mins = String(dt.getMinutes()).padStart(2, '0');
-            const secs = String(dt.getSeconds()).padStart(2, '0');
-            const ms = String(dt.getMilliseconds()).padStart(3, '0');
-            return `${day}T${hours}:${mins}:${secs}.${ms}`;
+            return formatTimestamp(timestamp, 'header');
         }
 
         function updateSelectionButtons() {
@@ -2872,8 +2942,7 @@
             const threadColor = getThreadColor(threadId);
             const threadLabel = threadId !== '--' ? (threadId.length > 15 ? threadId.substring(0, 15) + '...' : threadId) : '--';
             
-            const dt = new Date(req.startTs);
-            const startTime = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}:${String(dt.getSeconds()).padStart(2,'0')}.${String(dt.getMilliseconds()).padStart(3,'0')}`;
+            const startTime = formatTimestamp(req.startTs, 'detail');
             
             document.getElementById('detailOrdinal').textContent = ordinal;
             document.getElementById('detailId').textContent = req.id;
@@ -3810,6 +3879,9 @@
 
         // Initialize button states
         updateSelectionButtons();
+
+        // Initialize timezone dropdown
+        populateTimezoneSelect();
 
         // Setup drag and drop
         setupDragAndDrop();

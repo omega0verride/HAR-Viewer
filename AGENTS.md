@@ -140,6 +140,20 @@ HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`ind
 - This ensures file selection works correctly after back/forward navigation
 - **Additional fix**: File inputs are now cleared after each file selection (success or error), allowing the same file to be re-selected after parse errors
 
+### 12. Timezone Selection
+- Added timezone dropdown in the filter row (after Base URI filter)
+- Uses `Intl.supportedValuesOf('timeZone')` to populate all available IANA timezones
+- Defaults to the user's system timezone
+- `selectedTimezone` variable stores the current timezone selection ('local', 'utc', or IANA timezone name)
+- `handleTimezoneChange()` triggers a timeline re-render when timezone changes
+- `populateTimezoneSelect()` populates the dropdown on page load
+- `formatTimestamp(timestamp, format)` function centralizes all timestamp formatting:
+  - `'table'`: `DD/MM HH:mm:ss.SSS` - for table rows
+  - `'short'`: `HH:mm:ss` - for time-only display
+  - `'header'`: `DDTHH:mm:ss.SSS` - for timeline header and cursor
+  - `'detail'`: `YYYY-MM-DD HH:mm:ss.SSS` - for detail panel
+- Uses `Intl.DateTimeFormat` for arbitrary timezone conversion
+
 ## JSON Format Fields
 - **Required**: `id`, `uri`, `method`, `statusCode`, `startRequestTimestamp`, `beginResponseTimestamp`, `endResponseTimestamp`, `threadId`
 - **Additional**: `statusMessage`, `requestHeaders`, `responseHeaders`, `requestBodyPath`, `responseBodyPath`, `requestBodyChunks[]`, `responseBodyChunks[]`
@@ -184,6 +198,8 @@ Use event delegation instead of inline onclick handlers where possible. For clic
 - `setupResizeHandler()` - sets up window resize listener for dynamic tick updates
 - `zoomToFit()` - uses binary search to find optimal zoom level that fits timeline to visible width (works zooming in or out)
 - `sliderToWidth(value)` / `widthToSlider(width)` - logarithmic conversion between slider value (0-100) and timeline width (500-2M px)
+- `formatTimestamp(timestamp, format)` - formats timestamp based on selected timezone (local/utc)
+- `handleTimezoneChange()` - handles timezone dropdown changes
 
 ### CRITICAL: Dual Body Viewers Must Be Updated Together
 There are TWO body viewers in the app:
