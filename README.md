@@ -11,7 +11,7 @@
 
 <p align="center" style="font-size: 1.2em; text-decoration: underline; text-decoration-color: #888;">
 <b>
-<a href="https://harviewer.com/">Try Online 🌐</a>
+<a href="https://harviewer.com/">Try Online - 🌐harviewer.com</a>
 </b>
 </p>
 
