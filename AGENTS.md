@@ -1,4 +1,4 @@
-# HttpWaterfall - Project Notes for Future LLMs
+# HAR-Viewer - Project Notes for Future LLMs
 
 ## IMPORTANT: Keep This File Updated
 When making changes or adding new features to the codebase, always update this file to document:
@@ -13,7 +13,7 @@ This ensures future LLMs have accurate context about the project.
 **IMPORTANT**: Also keep `README.md` updated when adding or changing user-facing features, supported formats, keyboard shortcuts, or any other information that users need to know. The README is the public-facing documentation on GitHub.
 
 ## Overview
-HttpWaterfall is an HTTP request timeline visualizer in a single HTML file (`index.html`). It loads request data from JSON files or HAR files and displays them in a waterfall timeline.
+HAR-Viewer is an HTTP request timeline visualizer in a single HTML file (`index.html`). It loads request data from JSON files or HAR files and displays them in a waterfall timeline.
 
 ## Core Features
 

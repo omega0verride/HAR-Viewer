@@ -1,7 +1,7 @@
 <p align="center">
-  <img src="icon.svg" width="120" height="120" alt="HTTP-Waterfall">
+  <img src="icon.svg" width="120" height="120" alt="HAR-Viewer">
 </p>
-<h1 align="center">HTTP-Waterfall</h1>
+<h1 align="center">HAR-Viewer</h1>
 
 > **Disclaimer:** This project is vibe coded. It works, but may contain questionable choices.
 
