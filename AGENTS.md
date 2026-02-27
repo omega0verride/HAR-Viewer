@@ -154,6 +154,34 @@ HAR-Viewer is an HTTP request timeline visualizer in a single HTML file (`index.
   - `'detail'`: `YYYY-MM-DD HH:mm:ss.SSS` - for detail panel
 - Uses `Intl.DateTimeFormat` for arbitrary timezone conversion
 
+### 5. Fiddler AutoResponder Export
+- Export button appears in the bottom bar after data is loaded
+- Opens a dialog with configurable options:
+  - **Export Path**: Absolute path where the user will extract the zip (required). Fiddler requires absolute file paths for action files; this path is prefixed to all generated `.dat` file references in the rules.
+  - **Export Scope**: All filtered requests or selected requests only
+  - **Match Options**: Exact match URI, case-sensitive URI, match only once
+  - **Response Options**: Include response delay (latency), override Content-Length
+  - **Override Response Headers**: Add/remove response headers dynamically
+- Generates a `.zip` file containing:
+  - `rules.farx` - Fiddler AutoResponder XML file with all rules
+  - `responses/<id>_response.dat` - Response data files (status line + headers + body)
+- **Action file resolution**:
+  - If a request has `responseBodyPath` (already on disk), that path is used directly as the Fiddler action (no `.dat` file generated)
+  - Otherwise, a `.dat` file is generated containing the status line, headers, and body, and the action points to `<exportPath>/responses/<id>_response.dat`
+- **X-AutoResponder-ActionFile header**: Each generated `.dat` file includes this header pointing to its own absolute path (matching Fiddler's convention from `FiddlerExportEngine.java`)
+- Rule XML generation ported from `FiddlerExportEngine.java` / `FiddlerRule.java`
+- Uses a minimal vanilla JS ZIP generator (store-only, no compression)
+- Key functions:
+  - `openFiddlerExportDialog()` - Opens the export configuration dialog
+  - `closeFiddlerExportDialog()` - Closes the dialog
+  - `executeFiddlerExport()` - Builds rules and downloads zip
+  - `buildFiddlerRuleXML(rule)` - Generates XML for a single rule
+  - `buildFiddlerRuleMatch(rule)` - Builds the Match attribute value
+  - `buildResponseDatContent(req, options, actionFilePath)` - Builds response .dat file content
+  - `fiddlerXmlEscape(text)` / `fiddlerRegexEscape(s)` - Escaping utilities
+  - `downloadAsZip(files, zipName)` - Minimal ZIP file generator
+  - `addExportOverrideHeader()` / `getExportOverrideHeaders()` - Override header management
+
 ## JSON Format Fields
 - **Required**: `id`, `uri`, `method`, `statusCode`, `startRequestTimestamp`, `beginResponseTimestamp`, `endResponseTimestamp`, `threadId`
 - **Additional**: `statusMessage`, `requestHeaders`, `responseHeaders`, `requestBodyPath`, `responseBodyPath`, `requestBodyChunks[]`, `responseBodyChunks[]`
