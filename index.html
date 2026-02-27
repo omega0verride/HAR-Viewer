@@ -845,6 +845,10 @@
         .export-option label { flex: 1; color: #ccc; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .export-option input[type="checkbox"] { cursor: pointer; accent-color: #4fc3f7; }
         .export-option-desc { font-size: 11px; color: #666; margin-top: 2px; }
+        .export-option-2col label {
+            display: grid; grid-template-columns: auto 1fr 1.2fr; align-items: center; gap: 8px;
+        }
+        .export-option-2col .export-option-desc { margin-top: 0; }
         .export-header-row {
             display: flex; gap: 8px; padding: 4px 0; align-items: center;
         }
@@ -1209,32 +1213,32 @@
             </div>
             <div class="export-dialog-section">
                 <div class="export-dialog-section-title">Match Options</div>
-                <div class="export-option">
-                    <label><input type="checkbox" id="exportExactMatch" checked> Use Exact Match URI
+                <div class="export-option export-option-2col">
+                    <label><input type="checkbox" id="exportExactMatch" checked> <span>Exact Match URI</span>
                         <div class="export-option-desc">Match the full URI exactly (otherwise substring)</div>
                     </label>
                 </div>
-                <div class="export-option">
-                    <label><input type="checkbox" id="exportCaseSensitive"> Case Sensitive URI
+                <div class="export-option export-option-2col">
+                    <label><input type="checkbox" id="exportCaseSensitive"> <span>Case Sensitive URI</span>
                         <div class="export-option-desc">URI matching will be case-sensitive</div>
                     </label>
                 </div>
-                <div class="export-option">
-                    <label><input type="checkbox" id="exportMatchOnce" checked> Match Only Once
+                <div class="export-option export-option-2col">
+                    <label><input type="checkbox" id="exportMatchOnce" checked> <span>Match Only Once</span>
                         <div class="export-option-desc">Disable the rule after it matches one request</div>
                     </label>
                 </div>
             </div>
             <div class="export-dialog-section">
                 <div class="export-dialog-section-title">Response Options</div>
-                <div class="export-option">
-                    <label><input type="checkbox" id="exportIncludeDelay" checked> Include Response Delay
+                <div class="export-option export-option-2col">
+                    <label><input type="checkbox" id="exportIncludeDelay" checked> <span>Include Response Delay</span>
                         <div class="export-option-desc">Simulate original response latency</div>
                     </label>
                 </div>
-                <!-- <div class="export-option">
-                    <label><input type="checkbox" id="exportOverrideContentLength" checked> Override Content-Length
-                        <div class="export-option-desc">Recalculate Content-Length header from response body size</div>
+                <!-- <div class="export-option export-option-2col">
+                    <label><input type="checkbox" id="exportOverrideContentLength" checked> <span>Override Content-Length</span>
+                        <div class="export-option-desc">Recalculate Content-Length from response body size</div>
                     </label>
                 </div> -->
             </div>
