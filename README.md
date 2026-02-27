@@ -19,7 +19,7 @@
 
 1. Download or clone this repository
 2. Open `index.html` in any modern browser
-3. Drop a HAR or JSON file onto the page (or click to browse)
+3. Drop a HAR or JSON file onto the page (or click 'Select File' to browse)
 
 That's it. Everything runs client-side in a single HTML file.
 
