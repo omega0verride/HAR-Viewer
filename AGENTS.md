@@ -184,8 +184,9 @@ HAR-Viewer is an HTTP request timeline visualizer in a single HTML file (`index.
 
 ## JSON Format Fields
 - **Required**: `id`, `uri`, `method`, `statusCode`, `startRequestTimestamp`, `beginResponseTimestamp`, `endResponseTimestamp`, `threadId`
-- **Additional**: `statusMessage`, `requestHeaders`, `responseHeaders`, `requestBodyPath`, `responseBodyPath`, `requestBodyChunks[]`, `responseBodyChunks[]`
+- **Additional**: `statusMessage`, `requestHeaders`, `responseHeaders`, `requestBodyPath`, `responseBodyPath`, `requestBodyChunks[]`, `responseBodyChunks[]`, `responseContentLength`
 - **Path vs Chunks**: `requestBodyPath`/`responseBodyPath` and `requestBodyChunks[]`/`responseBodyChunks[]` are interchangeable. Chunks contain the actual content inline; paths are links to external files (to save memory). When paths are used, `requests_data_path` in the object format provides the base directory.
+- **responseContentLength**: Response body size in bytes. Shown in the "Size" table column and detail panel. Formatted with `formatBytes()` (B, KB, MB, GB). For HAR files, mapped from `res.content.size` (preferred) or `res.bodySize` as fallback.
 
 ## File Structure
 ```
@@ -228,6 +229,7 @@ Use event delegation instead of inline onclick handlers where possible. For clic
 - `sliderToWidth(value)` / `widthToSlider(width)` - logarithmic conversion between slider value (0-100) and timeline width (500-2M px)
 - `formatTimestamp(timestamp, format)` - formats timestamp based on selected timezone (local/utc)
 - `handleTimezoneChange()` - handles timezone dropdown changes
+- `formatBytes(bytes)` - formats byte count to human-readable string (B, KB, MB, GB)
 
 ### CRITICAL: Dual Body Viewers Must Be Updated Together
 There are TWO body viewers in the app:

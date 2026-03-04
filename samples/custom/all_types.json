@@ -20,7 +20,8 @@
     ],
     "responseBodyChunks": [
       "{\"id\": 2, \"name\": \"John Doe\", \"email\": \"john@example.com\", \"createdAt\": \"2024-01-01T00:00:00Z\"}"
-    ]
+    ],
+    "responseContentLength": 95
   },
   {
     "id": 2,
@@ -38,14 +39,14 @@
     "responseHeaders": {
       "Content-Type": "application/xml"
     },
-    "requestBodyChunks": [
-    ],
+    "requestBodyChunks": [],
     "responseBodyChunks": [
       "<roles>",
       "  <role>admin</role>",
       "  <role>editor</role>",
       "</roles>"
-    ]
+    ],
+    "responseContentLength": 56
   },
   {
     "id": 3,
@@ -106,7 +107,8 @@
     ],
     "responseHeaders": {
       "Content-Type": "image/svg+xml"
-    }
+    },
+    "responseContentLength": 878
   },
   {
     "id": 7,
@@ -123,7 +125,8 @@
     ],
     "responseHeaders": {
       "Content-Type": "text/plain"
-    }
+    },
+    "responseContentLength": 46928
   },
   {
     "id": 8,

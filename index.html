@@ -262,7 +262,7 @@
         .timeline-table th:nth-child(7) { width: 32px; }
         .timeline-table th:nth-child(8) { width: 50px; text-align: center; }
         .timeline-table th:nth-child(9) { width: 32px; }
-        .timeline-table th:nth-child(10) { width: 32px; }
+        .timeline-table th:nth-child(10) { width: 50px; }
         .timeline-table th:nth-child(11) { width: 38px; }
         .timeline-table th:nth-child(12) { width: auto; }
 
@@ -348,7 +348,7 @@
         }
         
         .timeline-column {
-            position: relative; height: 38px;
+            position: relative; height: 44px;
             border-bottom: 1px solid #2a2a2a;
             transition: background 0.15s;
             box-sizing: border-box;
@@ -1082,7 +1082,8 @@
     "requestBodyChunks": ["{ \"name\": \"Alice\" }"],
     "responseBodyChunks": ["{ \"id\": 1, \"name\": \"Alice\" }"],
     "requestBodyPath": "req_body_1.json",
-    "responseBodyPath": "res_body_1.json"
+    "responseBodyPath": "res_body_1.json",
+    "responseContentLength": 512
   },
   ...
 ]</pre>
@@ -1549,7 +1550,8 @@
                     responseMimeType: responseMimeType,
                     responseEncoding: isBase64 ? 'base64' : 'text',
                     responseOriginalBody: originalBodyContent,
-                    type: type
+                    type: type,
+                    responseContentLength: res.content?.size >= 0 ? res.content.size : (res.bodySize >= 0 ? res.bodySize : null)
                 };
             });
             
@@ -1598,11 +1600,12 @@
             return normalized.join('/');
         }
         
-        function getBodyCell(chunks, bodyPath, type, id) {
+        function getBodyCell(chunks, bodyPath, type, id, size) {
+            const sizeLabel = `<div style="font-size:11px;color:#888;line-height:1;margin-top:1px;">${formatBytes(size)}</div>`;
             if (chunks && chunks.length > 0) {
-                return `<button class="action-btn" onclick="event.stopPropagation(); showBodyContent(${id}, '${type}')">📄</button>`;
+                return `<button class="action-btn" onclick="event.stopPropagation(); showBodyContent(${id}, '${type}')">📄</button>${sizeLabel}`;
             } else if (bodyPath) {
-                return `<a class="action-btn link" href="${getFileUrl(bodyPath)}" target="_blank" onclick="event.stopPropagation()">📄</a>`;
+                return `<a class="action-btn link" href="${getFileUrl(bodyPath)}" target="_blank" onclick="event.stopPropagation()">📄</a>${sizeLabel}`;
             }
             return '-';
         }
@@ -2241,7 +2244,8 @@
                     type: type,
                     responseMimeType: req.responseMimeType || '',
                     responseEncoding: req.responseEncoding || '',
-                    responseOriginalBody: req.responseOriginalBody || null
+                    responseOriginalBody: req.responseOriginalBody || null,
+                    responseContentLength: req.responseContentLength != null ? req.responseContentLength : null
                 };
             });
             
@@ -2425,7 +2429,7 @@
                         <td><span class="status-badge ${req.statusClass}" style="font-size: 12px; padding: 2px 7px;" title="${req.msg}">${req.status}</span></td>
                         <td style="text-align: center;"><span class="type-badge type-${(req.type || '').toLowerCase()}" title="${escapeHtml(req.type || '')}">${req.type || '-'}</span></td>
                         <td style="text-align: center;">${getBodyCell(req.requestBodyChunks, req.requestBodyPath, 'request', req.id)}</td>
-                        <td style="text-align: center;">${getBodyCell(req.responseBodyChunks, req.responseBodyPath, 'response', req.id)}</td>
+                        <td style="text-align: center;">${getBodyCell(req.responseBodyChunks, req.responseBodyPath, 'response', req.id, req.responseContentLength)}</td>
                         <td style="text-align: center;"><button class="action-btn" onclick="event.stopPropagation(); showHeaders(${req.id})">📚</button></td>
                         <td class="endpoint-cell" style="font-size: 12px;" onmouseenter="showUriTooltipFromData(event, this)" onmouseleave="hideUriTooltip()" data-original-uri="${escapeHtml(req.uri).replace(/"/g, '&quot;')}">
                             ${escapeHtml(getDisplayUri(req.uri))}
@@ -3132,6 +3136,7 @@
                     <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value ${statusClass}">${req.status} ${req.msg}</span></div>
                     <div class="detail-row"><span class="detail-label">Duration</span><span class="detail-value">${req.durationHuman}</span></div>
                     <div class="detail-row"><span class="detail-label">Type</span><span class="detail-value"><span class="type-badge type-${(req.type || '').toLowerCase()}">${req.type || '-'}</span></span></div>
+                    <div class="detail-row"><span class="detail-label">Size</span><span class="detail-value">${formatBytes(req.responseContentLength)}</span></div>
                     ${getDetailBodySection(req, 'response')}
                 </div>
             `;
@@ -3860,6 +3865,14 @@
             return defaults[status] || 'Unknown';
         }
         
+        function formatBytes(bytes) {
+            if (bytes == null || bytes < 0) return '- B';
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+        }
+
         function formatDuration(ms) {
             if (ms < 0) return '0ms';
             ms = Math.round(ms);

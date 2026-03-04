@@ -18,7 +18,8 @@
       "X-Request-Id": "abc123"
     },
     "requestBodyPath": "request_body_1.json",
-    "responseBodyPath": "response_body_1.json"
+    "responseBodyPath": "response_body_1.json",
+    "responseContentLength": 256
   },
   {
     "id": 2,
@@ -41,7 +42,8 @@
     ],
     "responseBodyChunks": [
       "{\"id\": 2, \"name\": \"John Doe\", \"email\": \"john@example.com\", \"createdAt\": \"2024-01-01T00:00:00Z\"}"
-    ]
+    ],
+    "responseContentLength": 95
   },
   {
     "id": 3,

@@ -24,7 +24,8 @@
     ],
     "responseBodyChunks": [
       "{\"success\": true, \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\", \"expiresIn\": 3600, \"user\": {\"id\": 42, \"name\": \"John Doe\", \"email\": \"john.doe@example.com\", \"role\": \"customer\"}}"
-    ]
+    ],
+    "responseContentLength": 297
   },
   {
     "id": 2,
@@ -48,7 +49,8 @@
     },
     "responseBodyChunks": [
       "{\"id\": 42, \"name\": \"John Doe\", \"email\": \"john.doe@example.com\", \"phone\": \"+1-555-123-4567\", \"createdAt\": \"2023-06-15T10:30:00Z\", \"avatarUrl\": \"https://cdn.myshop.com/avatars/user_42.jpg\", \"addresses\": [{\"type\": \"billing\", \"line1\": \"123 Main St\", \"city\": \"New York\", \"state\": \"NY\", \"zip\": \"10001\", \"country\": \"US\"}, {\"type\": \"shipping\", \"line1\": \"456 Oak Ave\", \"city\": \"Los Angeles\", \"state\": \"CA\", \"zip\": \"90001\", \"country\": \"US\"}]}"
-    ]
+    ],
+    "responseContentLength": 432
   },
   {
     "id": 3,
@@ -74,7 +76,8 @@
     },
     "responseBodyChunks": [
       "{\"products\": [{\"id\": 101, \"name\": \"Wireless Bluetooth Headphones\", \"price\": 79.99, \"currency\": \"USD\", \"image\": \"https://cdn.myshop.com/products/headphones.jpg\", \"rating\": 4.5, \"reviewCount\": 234}, {\"id\": 102, \"name\": \"Smart Watch Series 5\", \"price\": 299.99, \"currency\": \"USD\", \"image\": \"https://cdn.myshop.com/products/watch.jpg\", \"rating\": 4.7, \"reviewCount\": 567}, {\"id\": 103, \"name\": \"USB-C Charging Cable 6ft\", \"price\": 14.99, \"currency\": \"USD\", \"image\": \"https://cdn.myshop.com/products/cable.jpg\", \"rating\": 4.2, \"reviewCount\": 1234}, {\"id\": 104, \"name\": \"Laptop Stand Adjustable\", \"price\": 39.99, \"currency\": \"USD\", \"image\": \"https://cdn.myshop.com/products/stand.jpg\", \"rating\": 4.6, \"reviewCount\": 89}], \"total\": 156, \"page\": 1, \"perPage\": 20}"
-    ]
+    ],
+    "responseContentLength": 752
   },
   {
     "id": 4,
@@ -99,7 +102,8 @@
     },
     "responseBodyChunks": [
       "{\"id\": 101, \"name\": \"Wireless Bluetooth Headphones\", \"price\": 79.99, \"currency\": \"USD\", \"description\": \"Premium wireless headphones with active noise cancellation, 30-hour battery life, and premium sound quality.\", \"images\": [\"https://cdn.myshop.com/products/headphones_1.jpg\", \"https://cdn.myshop.com/products/headphones_2.jpg\", \"https://cdn.myshop.com/products/headphones_3.jpg\"], \"specifications\": {\"brand\": \"SoundMax\", \"model\": \"SM-500\", \"connectivity\": \"Bluetooth 5.0\", \"battery\": \"30 hours\", \"weight\": \"250g\"}, \"rating\": 4.5, \"reviewCount\": 234, \"inStock\": true, \"stockQuantity\": 45}"
-    ]
+    ],
+    "responseContentLength": 589
   },
   {
     "id": 5,
@@ -121,6 +125,7 @@
       "Cache-Control": "public, max-age=86400",
       "ETag": "\"abc123def456\""
     },
+    "responseContentLength": 834,
     "responseBodyChunks": [
       "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAVrAgAASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5..."
     ]
@@ -145,7 +150,8 @@
     },
     "responseBodyChunks": [
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='0%'><stop offset='0%' style='stop-color:#3b82f6;stop-opacity:1' /><stop offset='100%' style='stop-color:#10b981;stop-opacity:1' /></linearGradient></defs><rect x='0' y='0' width='200' height='60' rx='8' fill='#1e293b'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-weight='bold' font-size='24' fill='url(#grad)'>MYSHOP</text></svg>"
-    ]
+    ],
+    "responseContentLength": 515
   },
   {
     "id": 7,
@@ -168,7 +174,8 @@
     },
     "responseBodyChunks": [
       "{\"items\": [{\"productId\": 101, \"name\": \"Wireless Bluetooth Headphones\", \"quantity\": 1, \"price\": 79.99}, {\"productId\": 103, \"name\": \"USB-C Charging Cable 6ft\", \"quantity\": 2, \"price\": 14.99}], \"subtotal\": 109.97, \"tax\": 8.80, \"shipping\": 5.99, \"total\": 124.76, \"itemCount\": 3}"
-    ]
+    ],
+    "responseContentLength": 274
   },
   {
     "id": 8,
@@ -195,7 +202,8 @@
     ],
     "responseBodyChunks": [
       "{\"success\": true, \"cartItemId\": 4, \"message\": \"Item added to cart\"}"
-    ]
+    ],
+    "responseContentLength": 67
   },
   {
     "id": 9,
@@ -222,7 +230,8 @@
     ],
     "responseBodyChunks": [
       "{\"orderId\": \"ORD-2024-00142\", \"status\": \"confirmed\", \"createdAt\": \"2024-01-01T00:00:55Z\", \"estimatedDelivery\": \"2024-01-05T23:59:59Z\", \"items\": [{\"productId\": 101, \"name\": \"Wireless Bluetooth Headphones\", \"quantity\": 1, \"price\": 79.99}, {\"productId\": 103, \"name\": \"USB-C Charging Cable 6ft\", \"quantity\": 2, \"price\": 14.99}, {\"productId\": 104, \"name\": \"Laptop Stand Adjustable\", \"quantity\": 1, \"price\": 39.99}], \"subtotal\": 149.96, \"tax\": 12.00, \"shipping\": 5.99, \"total\": 167.95}"
-    ]
+    ],
+    "responseContentLength": 479
   },
   {
     "id": 10,
@@ -245,7 +254,8 @@
     },
     "responseBodyChunks": [
       "{\"orderId\": \"ORD-2024-00142\", \"status\": \"shipped\", \"trackingNumber\": \"1Z999AA10123456784\", \"carrier\": \"UPS\", \"shippedAt\": \"2024-01-02T14:30:00Z\", \"estimatedDelivery\": \"2024-01-04T23:59:59Z\", \"trackingUrl\": \"https://www.ups.com/track?loc=en_US&tracknum=1Z999AA10123456784\"}"
-    ]
+    ],
+    "responseContentLength": 272
   },
   {
     "id": 11,
@@ -268,7 +278,8 @@
     },
     "responseBodyChunks": [
       "{\"notifications\": [{\"id\": 1, \"type\": \"order_shipped\", \"title\": \"Your order has shipped!\", \"message\": \"Order #ORD-2024-00142 is on its way\", \"read\": false, \"createdAt\": \"2024-01-02T14:30:00Z\"}, {\"id\": 2, \"type\": \"price_drop\", \"title\": \"Price dropped!\", \"message\": \"Wireless Bluetooth Headphones is now $59.99 (25% off)\", \"read\": false, \"createdAt\": \"2024-01-01T20:15:00Z\"}], \"unreadCount\": 2}"
-    ]
+    ],
+    "responseContentLength": 391
   },
   {
     "id": 12,
@@ -290,7 +301,8 @@
     },
     "responseBodyChunks": [
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?><reviews><review><id>456</id><rating>5</rating><title>Amazing watch!</title><comment>Best smart watch I've ever owned. Battery lasts forever and the display is beautiful.</comment><author>Mike T.</author><date>2023-12-28</date></review><review><id>457</id><rating>4</rating><title>Great but pricey</title><comment>Solid build quality and great features. A bit expensive but worth it.</comment><author>Sarah L.</author><date>2023-12-25</date></review></reviews>"
-    ]
+    ],
+    "responseContentLength": 498
   },
   {
     "id": 14,
@@ -315,7 +327,8 @@
     },
     "responseBodyChunks": [
       "/* Main Stylesheet */body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background-color:#f8fafc;color:#1e293b}header{background:#fff;border-bottom:1px solid #e2e8f0;padding:1rem 2rem}.btn{background:#3b82f6;color:#fff;border:none;padding:0.5rem 1rem;border-radius:0.375rem;cursor:pointer}.btn:hover{background:#2563eb}.card{background:#fff;border-radius:0.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.1);padding:1.5rem;margin-bottom:1rem}"
-    ]
+    ],
+    "responseContentLength": 503
   },
   {
     "id": 13,
@@ -339,7 +352,8 @@
     },
     "responseBodyChunks": [
       "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>MyShop - Premium Electronics</title><link rel=\"stylesheet\" href=\"/styles/main.css\"></head><body><header><div class=\"logo\">MyShop</div><nav><a href=\"/\">Home</a><a href=\"/products\">Products</a><a href=\"/cart\">Cart</a><a href=\"/account\">Account</a></nav></header><main><section class=\"hero\"><h1>Welcome to MyShop</h1><p>Your one-stop shop for premium electronics and accessories</p><a href=\"/products\" class=\"btn\">Shop Now</a></section><section class=\"featured\"><h2>Featured Products</h2><div class=\"product-grid\"><div class=\"product-card\"><img src=\"/images/products/headphones_1.jpg\" alt=\"Headphones\"><h3>Wireless Headphones</h3><p class=\"price\">$79.99</p></div><div class=\"product-card\"><img src=\"/images/products/watch.jpg\" alt=\"Smart Watch\"><h3>Smart Watch</h3><p class=\"price\">$299.99</p></div></div></section></main><footer><p>&copy; 2024 MyShop. All rights reserved.</p></footer><script src=\"/scripts/app.js\"></script></body></html>"
-    ]
+    ],
+    "responseContentLength": 1072
   },
   {
     "id": 15,
@@ -364,7 +378,8 @@
     },
     "responseBodyChunks": [
       "/** Main Application JavaScript */(function(){const API_BASE='https://api.myshop.com/v1';let authToken=null;function login(email,password){return fetch(API_BASE+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})}).then(r=>r.json())}function getProducts(page=1,limit=20){return fetch(API_BASE+'/products?page='+page+'&limit='+limit,{headers:{Authorization:'Bearer '+authToken}}).then(r=>r.json())}})();"
-    ]
+    ],
+    "responseContentLength": 461
   },
   {
     "id": 16,
@@ -387,7 +402,8 @@
     },
     "responseBodyChunks": [
       "{\"query\": \"headphones\", \"results\": [{\"id\": 101, \"name\": \"Wireless Bluetooth Headphones\", \"price\": 79.99, \"type\": \"product\"}, {\"id\": 201, \"name\": \"Wireless Earbuds Pro\", \"price\": 149.99, \"type\": \"product\"}, {\"id\": 105, \"name\": \"Over-Ear Studio Headphones\", \"price\": 199.99, \"type\": \"product\"}], \"total\": 3, \"suggestions\": [\"wireless headphones\", \"bluetooth headphones\"]}"
-    ]
+    ],
+    "responseContentLength": 369
   },
   {
     "id": 17,
@@ -410,7 +426,8 @@
     },
     "responseBodyChunks": [
       "{\"items\": [{\"productId\": 102, \"name\": \"Smart Watch Series 5\", \"price\": 299.99, \"addedAt\": \"2023-12-20T10:00:00Z\"}, {\"productId\": 201, \"name\": \"Wireless Earbuds Pro\", \"price\": 149.99, \"addedAt\": \"2023-12-22T15:30:00Z\"}], \"count\": 2}"
-    ]
+    ],
+    "responseContentLength": 231
   },
   {
     "id": 18,
@@ -432,7 +449,8 @@
     },
     "responseBodyChunks": [
       "{\"categories\": [{\"id\": 1, \"name\": \"Electronics\", \"slug\": \"electronics\", \"icon\": \"laptop\", \"productCount\": 45}, {\"id\": 2, \"name\": \"Accessories\", \"slug\": \"accessories\", \"icon\": \"headphones\", \"productCount\": 32}, {\"id\": 3, \"name\": \"Wearables\", \"slug\": \"wearables\", \"icon\": \"watch\", \"productCount\": 18}, {\"id\": 4, \"name\": \"Cables & Chargers\", \"slug\": \"cables-chargers\", \"icon\": \"usb\", \"productCount\": 56}]}"
-    ]
+    ],
+    "responseContentLength": 402
   },
   {
     "id": 19,
@@ -458,7 +476,8 @@
     ],
     "responseBodyChunks": [
       "{\"success\": true, \"message\": \"Settings updated successfully\"}"
-    ]
+    ],
+    "responseContentLength": 61
   },
   {
     "id": 20,
@@ -480,7 +499,8 @@
     },
     "responseBodyChunks": [
       "Welcome to MyShop Customer Support! How can we help you today?"
-    ]
+    ],
+    "responseContentLength": 62
   },
   {
     "id": 21,
@@ -504,6 +524,7 @@
     },
     "responseBodyChunks": [
       "{\"success\": true, \"message\": \"Logged out successfully\"}"
-    ]
+    ],
+    "responseContentLength": 55
   }
 ]

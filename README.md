@@ -94,7 +94,8 @@ A JSON array of request objects:
     "requestBodyChunks": ["{ \"name\": \"Alice\" }"],
     "responseBodyChunks": ["{ \"id\": 1, \"name\": \"Alice\" }"],
     "requestBodyPath": "req_body_1.json",
-    "responseBodyPath": "res_body_1.json"
+    "responseBodyPath": "res_body_1.json",
+    "responseContentLength": 512
   }
 ]
 ```
@@ -131,6 +132,7 @@ Wraps the array in an object with an optional base path for body files:
 | `responseBodyChunks` | Array of strings containing the response body |
 | `requestBodyPath` | File path to the request body content |
 | `responseBodyPath` | File path to the response body content |
+| `responseContentLength` | Response body size in bytes |
 
 > **Note:** `requestBodyPath`/`responseBodyPath` and `requestBodyChunks[]`/`responseBodyChunks[]` are interchangeable. Chunks contain the actual body content inline. Paths are links to external files, useful for saving memory when bodies are large. When using paths, set `requests_data_path` in the object format to provide the base directory.
 
