@@ -895,6 +895,8 @@
                 <div class="file-input-wrapper">
                     <input type="file" id="fileInput" accept=".json,.har">
                 </div>
+                <!-- PRELOADED DATA - Replace the contents of this script tag with your JSON or HAR data -->
+                <script id="preloadData" type="application/json"></script>
                 <div class="vertical-separator"></div>
                 <div class="filter-group">
                     <label>Method</label>
@@ -1445,12 +1447,33 @@
         
         document.getElementById('fileInput').addEventListener('change', handleFileSelect);
         
+        // Check for preloaded data
+        function checkPreloadedData() {
+            const preloadEl = document.getElementById('preloadData');
+            if (preloadEl && preloadEl.textContent.trim()) {
+                try {
+                    const data = JSON.parse(preloadEl.textContent);
+                    if (data.log && data.log.entries) {
+                        const converted = convertHarToRequests(data);
+                        processData(converted);
+                    } else {
+                        processData(data);
+                    }
+                } catch (err) {
+                    showError('Failed to parse preloaded data: ' + err.message);
+                }
+            }
+        }
+        
         window.addEventListener('pageshow', function(event) {
             const fileInput = document.getElementById('fileInput');
             const dropZoneFileInput = document.getElementById('dropZoneFileInput');
             if (fileInput) fileInput.value = '';
             if (dropZoneFileInput) dropZoneFileInput.value = '';
         });
+        
+        // Check for preloaded data on initial page load
+        checkPreloadedData();
         
         function handleFileSelect(event) {
             const file = event.target.files[0];

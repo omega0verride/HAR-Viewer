@@ -231,6 +231,27 @@ Use event delegation instead of inline onclick handlers where possible. For clic
 - `handleTimezoneChange()` - handles timezone dropdown changes
 - `formatBytes(bytes)` - formats byte count to human-readable string (B, KB, MB, GB)
 
+### Preloading Data
+The app supports embedding JSON or HAR data directly into the HTML file for automatic loading:
+
+1. **HTML element**: `<script id="preloadData" type="application/json">` (line ~899 in index.html)
+2. **How it works**: The `checkPreloadedData()` function runs on page load, parses the contents of this script tag, and loads the data automatically
+3. **Usage**: Replace the empty contents with your JSON array or HAR object (minified or pretty-printed)
+
+Example for embedding custom JSON:
+```html
+<script id="preloadData" type="application/json">
+[{"id":1,"uri":"http://localhost:3000/api/users","method":"GET","statusCode":200,"...":...}]
+</script>
+```
+
+Example for embedding HAR:
+```html
+<script id="preloadData" type="application/json">
+{"log":{"entries":[{"startedDateTime":"...","time":150,"request":{"url":"...","method":"GET",...},...}]}}
+</script>
+```
+
 ### CRITICAL: Dual Body Viewers Must Be Updated Together
 There are TWO body viewers in the app:
 1. **Body Popup Dialog** - `setBodyFormat()` function (around line 1395)
