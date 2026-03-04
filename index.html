@@ -1472,10 +1472,7 @@
             if (dropZoneFileInput) dropZoneFileInput.value = '';
         });
         
-        // Check for preloaded data on initial page load
-        checkPreloadedData();
-        
-        function handleFileSelect(event) {
+        // Check for preloaded data on initial page load (called at end of script)
             const file = event.target.files[0];
             if (!file) return;
             
@@ -4548,6 +4545,9 @@
                 e.stopPropagation();
             }
         });
+        
+        // Check for preloaded data after all initialization is complete
+        checkPreloadedData();
     </script>
 </body>
 </html>
