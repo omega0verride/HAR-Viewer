@@ -4231,12 +4231,8 @@
                     requestBody = req.requestBodyChunks.join('');
                 }
 
-                // Decode URI for matching (like URLDecoder in Java)
-                let decodedUri = req.uri;
-                try { decodedUri = decodeURIComponent(req.uri); } catch(e) {}
-
                 const rule = {
-                    url: decodedUri,
+                    url: req.uri,
                     useExactMatchURI: options.useExactMatchURI,
                     caseSensitiveURI: options.useCaseSensitiveURI,
                     requestMethod: req.method,
