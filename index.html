@@ -198,6 +198,38 @@
             border-color: #4fc3f7;
         }
         
+        /* Sticky column picker */
+        .sticky-picker-wrap { position: relative; display: flex; align-items: center; }
+        .sticky-picker-btn {
+            background: #252525; color: #aaa; border: 1px solid #444;
+            padding: 5px 10px; border-radius: 3px; font-size: 12px;
+            cursor: pointer; white-space: nowrap; transition: border-color 0.2s;
+        }
+        .sticky-picker-btn:hover { border-color: #4fc3f7; color: #e0e0e0; }
+        .sticky-picker-btn.active { border-color: #4fc3f7; color: #4fc3f7; }
+        .sticky-picker-popover {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            background: #252525;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 8px 0;
+            z-index: 1000;
+            min-width: 130px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .sticky-picker-popover.open { display: block; }
+        .sticky-picker-popover label {
+            display: flex; align-items: center; gap: 8px;
+            padding: 5px 14px; font-size: 12px; color: #ccc;
+            cursor: pointer; white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .sticky-picker-popover label:hover { background: #333; color: #fff; }
+        .sticky-picker-popover input[type=checkbox] { accent-color: #4fc3f7; cursor: pointer; }
+
         .github-link {
             position: fixed;
             top: 14px;
@@ -266,48 +298,14 @@
         .timeline-table th:nth-child(11) { width: 38px; }
         .timeline-table th:nth-child(12) { width: auto; }
 
-        /* Sticky columns: #(1), ID(2), Method(5), Status(7) */
-        /* left values are set dynamically by JS (updateStickyColumns) after render */
-        .timeline-table th:nth-child(1),
-        .timeline-table td:nth-child(1) { position: sticky; z-index: 5; }
-        .timeline-table th:nth-child(2),
-        .timeline-table td:nth-child(2) { position: sticky; z-index: 5; }
-        .timeline-table th:nth-child(5),
-        .timeline-table td:nth-child(5) { position: sticky; z-index: 5; }
-        .timeline-table th:nth-child(7),
-        .timeline-table td:nth-child(7) { position: sticky; z-index: 5; }
-        /* th already has position:sticky for top=0; boost z-index so they sit above sticky td */
-        .timeline-table th:nth-child(1),
-        .timeline-table th:nth-child(2),
-        .timeline-table th:nth-child(5),
-        .timeline-table th:nth-child(7) { z-index: 15; }
-
-        /* Default opaque background for sticky td cells (rows are transparent over #121212) */
-        .timeline-table td:nth-child(1),
-        .timeline-table td:nth-child(2),
-        .timeline-table td:nth-child(5),
-        .timeline-table td:nth-child(7) { background: #121212; }
-        /* Sticky td backgrounds for row states (opaque equivalents of the rgba colors) */
-        .request-row.hover td:nth-child(1),
-        .request-row.hover td:nth-child(2),
-        .request-row.hover td:nth-child(5),
-        .request-row.hover td:nth-child(7) { background: #252525; }
-        .request-row.selected-start td:nth-child(1),
-        .request-row.selected-start td:nth-child(2),
-        .request-row.selected-start td:nth-child(5),
-        .request-row.selected-start td:nth-child(7) { background: #1e3540; }
-        .request-row.selected-end td:nth-child(1),
-        .request-row.selected-end td:nth-child(2),
-        .request-row.selected-end td:nth-child(5),
-        .request-row.selected-end td:nth-child(7) { background: #3e222c; }
-        .request-row.selected td:nth-child(1),
-        .request-row.selected td:nth-child(2),
-        .request-row.selected td:nth-child(5),
-        .request-row.selected td:nth-child(7) { background: #1b2d34; }
-        .request-row.highlight td:nth-child(1),
-        .request-row.highlight td:nth-child(2),
-        .request-row.highlight td:nth-child(5),
-        .request-row.highlight td:nth-child(7) { background: #363318; }
+        /* Sticky column cells — position/left/z-index set by JS (updateStickyColumns) */
+        /* Opaque backgrounds needed so scrolling content doesn't show through */
+        .timeline-table td.sticky-col                    { background: #121212; }
+        .request-row.hover         td.sticky-col         { background: #252525; }
+        .request-row.selected-start td.sticky-col        { background: #1e3540; }
+        .request-row.selected-end  td.sticky-col         { background: #3e222c; }
+        .request-row.selected      td.sticky-col         { background: #1b2d34; }
+        .request-row.highlight     td.sticky-col         { background: #363318; }
 
         .request-row { cursor: pointer; transition: background 0.15s; user-select: none; }
         .request-row.hover, .timeline-column.hover { background: #252525; }
@@ -987,6 +985,11 @@
                     <label>Timezone</label>
                     <select id="timezoneSelect" onchange="handleTimezoneChange()" style="width: 80px;" title="Select timezone for timestamps"></select>
                 </div>
+                <div class="vertical-separator"></div>
+                <div class="sticky-picker-wrap" id="stickyPickerWrap">
+                    <button class="sticky-picker-btn" id="stickyPickerBtn" onclick="toggleStickyPicker(event)" title="Choose which columns stay sticky when scrolling horizontally">Sticky cols</button>
+                    <div class="sticky-picker-popover" id="stickyPickerPopover"></div>
+                </div>
                 <div class="vertical-separator" style="display: none;"></div>
                 <button class="btn" id="clearFiltersBtn" onclick="clearFilters()" style="padding: 6px 12px; font-size: 12px; display: none;">✕ Clear</button>
             </div>
@@ -1353,6 +1356,8 @@
         let requestsDataPath = null;
         let jsonFileHandle = null;
         let selectedTimezone = 'local';
+        // 0-based indices of columns that should be sticky (default: #, ID, Method, Status)
+        let stickyColumnIndices = [0, 1, 4, 6];
         
         function populateTimezoneSelect() {
             const select = document.getElementById('timezoneSelect');
@@ -1404,6 +1409,39 @@
         function handleTimezoneChange() {
             selectedTimezone = document.getElementById('timezoneSelect').value;
             renderTimeline();
+        }
+
+        // URI (index 11) is excluded — it's the main content column and shouldn't be sticky
+        const COLUMN_NAMES = ['#', 'ID', 'Thread', 'Timestamp', 'Method', 'Duration', 'Status', 'Type', 'Req', 'Res', 'Hdr'];
+
+        function initStickyPicker() {
+            const popover = document.getElementById('stickyPickerPopover');
+            if (!popover) return;
+            popover.innerHTML = COLUMN_NAMES.map((name, i) => `
+                <label>
+                    <input type="checkbox" data-col-index="${i}" ${stickyColumnIndices.includes(i) ? 'checked' : ''} onchange="handleStickyColChange(this)">
+                    ${name}
+                </label>
+            `).join('');
+        }
+
+        function toggleStickyPicker(e) {
+            e.stopPropagation();
+            const popover = document.getElementById('stickyPickerPopover');
+            const btn = document.getElementById('stickyPickerBtn');
+            if (!popover) return;
+            const isOpen = popover.classList.toggle('open');
+            btn.classList.toggle('active', isOpen);
+        }
+
+        function handleStickyColChange(checkbox) {
+            const idx = parseInt(checkbox.dataset.colIndex, 10);
+            if (checkbox.checked) {
+                if (!stickyColumnIndices.includes(idx)) stickyColumnIndices.push(idx);
+            } else {
+                stickyColumnIndices = stickyColumnIndices.filter(i => i !== idx);
+            }
+            updateStickyColumns();
         }
         
         function formatTimestamp(timestamp, format = 'full') {
@@ -2925,14 +2963,20 @@
             if (!table) return;
             const headerCells = Array.from(table.querySelectorAll('thead tr th'));
             if (!headerCells.length) return;
-            // Sticky column indices (0-based), in order: #=0, ID=1, Method=4, Status=6
-            const stickyIndices = [0, 1, 4, 6];
-            // Temporarily clear left on all sticky cells so offsetWidth reflects natural layout
-            stickyIndices.forEach(i => {
-                if (headerCells[i]) headerCells[i].style.left = '';
+            // Sort sticky indices ascending so we accumulate left-to-right
+            const stickyIndices = [...stickyColumnIndices].sort((a, b) => a - b);
+            const stickySet = new Set(stickyIndices);
+            // Reset ALL columns first
+            headerCells.forEach((th, i) => {
+                const nthChild = i + 1;
+                table.querySelectorAll(`th:nth-child(${nthChild}), td:nth-child(${nthChild})`).forEach(cell => {
+                    cell.style.position = '';
+                    cell.style.left = '';
+                    cell.style.zIndex = '';
+                    cell.classList.remove('sticky-col');
+                });
             });
-            // Each sticky column stacks immediately after the previous sticky column.
-            // So left[n] = sum of offsetWidths of all sticky columns before n.
+            // Apply sticky to selected columns, stacking them at the left edge
             let stickyAccumulated = 0;
             stickyIndices.forEach(i => {
                 const th = headerCells[i];
@@ -2940,7 +2984,10 @@
                 const leftPx = stickyAccumulated + 'px';
                 const nthChild = i + 1;
                 table.querySelectorAll(`th:nth-child(${nthChild}), td:nth-child(${nthChild})`).forEach(cell => {
+                    cell.style.position = 'sticky';
                     cell.style.left = leftPx;
+                    cell.style.zIndex = cell.tagName === 'TH' ? '15' : '5';
+                    if (cell.tagName === 'TD') cell.classList.add('sticky-col');
                 });
                 stickyAccumulated += th.offsetWidth;
             });
@@ -4531,6 +4578,20 @@
 
         // Initialize timezone dropdown
         populateTimezoneSelect();
+
+        // Initialize sticky column picker
+        initStickyPicker();
+
+        // Close sticky picker popover when clicking outside
+        document.addEventListener('click', (e) => {
+            const wrap = document.getElementById('stickyPickerWrap');
+            if (wrap && !wrap.contains(e.target)) {
+                const popover = document.getElementById('stickyPickerPopover');
+                const btn = document.getElementById('stickyPickerBtn');
+                if (popover) popover.classList.remove('open');
+                if (btn) btn.classList.remove('active');
+            }
+        });
 
         // Setup drag and drop
         setupDragAndDrop();
