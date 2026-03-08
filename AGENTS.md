@@ -224,6 +224,7 @@ Use event delegation instead of inline onclick handlers where possible. For clic
 - `toggleDetailBodyWrap(uniqueId)` - wrap toggle in detail panel
 - `escapeHtml(str)` - escape user content
 - `updateTimelineHeader()` - updates header width and ticks without full re-render
+- `updateStickyColumns()` - reads actual rendered `offsetLeft` of each sticky `th` and applies it as `left` style to all `th`/`td` in that column; called after render, resizer drag, and window resize. **Do not hardcode `left` values in CSS** — column widths are dynamic (can shrink when space is tight) so offsets must be measured at runtime.
 - `setupResizeHandler()` - sets up window resize listener for dynamic tick updates
 - `zoomToFit()` - uses binary search to find optimal zoom level that fits timeline to visible width (works zooming in or out)
 - `sliderToWidth(value)` / `widthToSlider(width)` - logarithmic conversion between slider value (0-100) and timeline width (500-2M px)

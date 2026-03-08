@@ -266,6 +266,49 @@
         .timeline-table th:nth-child(11) { width: 38px; }
         .timeline-table th:nth-child(12) { width: auto; }
 
+        /* Sticky columns: #(1), ID(2), Method(5), Status(7) */
+        /* left values are set dynamically by JS (updateStickyColumns) after render */
+        .timeline-table th:nth-child(1),
+        .timeline-table td:nth-child(1) { position: sticky; z-index: 5; }
+        .timeline-table th:nth-child(2),
+        .timeline-table td:nth-child(2) { position: sticky; z-index: 5; }
+        .timeline-table th:nth-child(5),
+        .timeline-table td:nth-child(5) { position: sticky; z-index: 5; }
+        .timeline-table th:nth-child(7),
+        .timeline-table td:nth-child(7) { position: sticky; z-index: 5; }
+        /* th already has position:sticky for top=0; boost z-index so they sit above sticky td */
+        .timeline-table th:nth-child(1),
+        .timeline-table th:nth-child(2),
+        .timeline-table th:nth-child(5),
+        .timeline-table th:nth-child(7) { z-index: 15; }
+
+        /* Default opaque background for sticky td cells (rows are transparent over #121212) */
+        .timeline-table td:nth-child(1),
+        .timeline-table td:nth-child(2),
+        .timeline-table td:nth-child(5),
+        .timeline-table td:nth-child(7) { background: #121212; }
+        /* Sticky td backgrounds for row states (opaque equivalents of the rgba colors) */
+        .request-row.hover td:nth-child(1),
+        .request-row.hover td:nth-child(2),
+        .request-row.hover td:nth-child(5),
+        .request-row.hover td:nth-child(7) { background: #252525; }
+        .request-row.selected-start td:nth-child(1),
+        .request-row.selected-start td:nth-child(2),
+        .request-row.selected-start td:nth-child(5),
+        .request-row.selected-start td:nth-child(7) { background: #1e3540; }
+        .request-row.selected-end td:nth-child(1),
+        .request-row.selected-end td:nth-child(2),
+        .request-row.selected-end td:nth-child(5),
+        .request-row.selected-end td:nth-child(7) { background: #3e222c; }
+        .request-row.selected td:nth-child(1),
+        .request-row.selected td:nth-child(2),
+        .request-row.selected td:nth-child(5),
+        .request-row.selected td:nth-child(7) { background: #1b2d34; }
+        .request-row.highlight td:nth-child(1),
+        .request-row.highlight td:nth-child(2),
+        .request-row.highlight td:nth-child(5),
+        .request-row.highlight td:nth-child(7) { background: #363318; }
+
         .request-row { cursor: pointer; transition: background 0.15s; user-select: none; }
         .request-row.hover, .timeline-column.hover { background: #252525; }
         .timeline-bar.hover { filter: brightness(1.2); }
@@ -2493,6 +2536,7 @@
             initResizer();
             syncScrollHandler();
             setupResizeHandler();
+            updateStickyColumns();
             
             // Restore measurement markers after re-render
             if (startTime !== null || endTime !== null) {
@@ -2630,9 +2674,9 @@
                     const isInTimeline = timelineSection && timelineSection.contains(target);
                     
                     if (isInDetails) {
-                        // Scroll details section (table) horizontally
+                        // Scroll details section (table) horizontally with reduced sensitivity
                         e.preventDefault();
-                        if (detailsSection) detailsSection.scrollLeft += e.deltaY;
+                        if (detailsSection) detailsSection.scrollLeft += e.deltaY * 0.2;
                     } else if (isInTimeline) {
                         // Scroll timeline (gantt) horizontally
                         e.preventDefault();
@@ -2876,6 +2920,32 @@
         
         let resizeTimeout = null;
         let resizeHandlerSetup = false;
+        function updateStickyColumns() {
+            const table = document.querySelector('.timeline-table');
+            if (!table) return;
+            const headerCells = Array.from(table.querySelectorAll('thead tr th'));
+            if (!headerCells.length) return;
+            // Sticky column indices (0-based), in order: #=0, ID=1, Method=4, Status=6
+            const stickyIndices = [0, 1, 4, 6];
+            // Temporarily clear left on all sticky cells so offsetWidth reflects natural layout
+            stickyIndices.forEach(i => {
+                if (headerCells[i]) headerCells[i].style.left = '';
+            });
+            // Each sticky column stacks immediately after the previous sticky column.
+            // So left[n] = sum of offsetWidths of all sticky columns before n.
+            let stickyAccumulated = 0;
+            stickyIndices.forEach(i => {
+                const th = headerCells[i];
+                if (!th) return;
+                const leftPx = stickyAccumulated + 'px';
+                const nthChild = i + 1;
+                table.querySelectorAll(`th:nth-child(${nthChild}), td:nth-child(${nthChild})`).forEach(cell => {
+                    cell.style.left = leftPx;
+                });
+                stickyAccumulated += th.offsetWidth;
+            });
+        }
+
         function setupResizeHandler() {
             if (resizeHandlerSetup) return;
             resizeHandlerSetup = true;
@@ -2883,6 +2953,7 @@
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(() => {
                     updateTimelineHeader();
+                    updateStickyColumns();
                 }, 100);
             });
         }
@@ -2917,6 +2988,7 @@
                     if (now - lastUpdate > 50) {
                         lastUpdate = now;
                         updateTimelineHeader();
+                        updateStickyColumns();
                     }
                 }
             });
@@ -2928,6 +3000,7 @@
                     document.body.style.cursor = '';
                     document.body.style.userSelect = '';
                     updateTimelineHeader();
+                    updateStickyColumns();
                 }
             });
         }
