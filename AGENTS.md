@@ -235,21 +235,21 @@ Use event delegation instead of inline onclick handlers where possible. For clic
 ### Preloading Data
 The app supports embedding JSON or HAR data directly into the HTML file for automatic loading:
 
-1. **HTML element**: `<script id="preloadData" type="application/json">` (line ~899 in index.html)
+1. **HTML element**: `<script id="preloadData">` (line ~899 in index.html)
 2. **How it works**: The `checkPreloadedData()` function runs on page load, parses the contents of this script tag, and loads the data automatically
 3. **UI behavior**: When preloaded data is used, the file input is hidden and replaced with a clickable icon linking to https://harviewer.com/
 4. **Usage**: Replace the empty contents with your JSON array or HAR object (minified or pretty-printed)
 
 Example for embedding custom JSON:
 ```html
-<script id="preloadData" type="application/json">
+<script id="preloadData">
 [{"id":1,"uri":"http://localhost:3000/api/users","method":"GET","statusCode":200,"...":...}]
 </script>
 ```
 
 Example for embedding HAR:
 ```html
-<script id="preloadData" type="application/json">
+<script id="preloadData">
 {"log":{"entries":[{"startedDateTime":"...","time":150,"request":{"url":"...","method":"GET",...},...}]}}
 </script>
 ```
