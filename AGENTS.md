@@ -237,7 +237,8 @@ The app supports embedding JSON or HAR data directly into the HTML file for auto
 
 1. **HTML element**: `<script id="preloadData" type="application/json">` (line ~899 in index.html)
 2. **How it works**: The `checkPreloadedData()` function runs on page load, parses the contents of this script tag, and loads the data automatically
-3. **Usage**: Replace the empty contents with your JSON array or HAR object (minified or pretty-printed)
+3. **UI behavior**: When preloaded data is used, the file input is hidden and replaced with a clickable icon linking to https://harviewer.com/
+4. **Usage**: Replace the empty contents with your JSON array or HAR object (minified or pretty-printed)
 
 Example for embedding custom JSON:
 ```html

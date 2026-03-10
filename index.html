@@ -42,6 +42,17 @@
             height: 100%;
         }
         
+        .harviewer-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .harviewer-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
         .vertical-separator {
             width: 1px;
             height: 24px;
@@ -936,6 +947,54 @@
                 <div class="file-input-wrapper">
                     <input type="file" id="fileInput" accept=".json,.har">
                 </div>
+                <a href="https://harviewer.com/" target="_blank" rel="noopener" id="harviewerLink" class="harviewer-link" style="display: none;" title="https://harviewer.com/">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32">
+                    <defs>
+                        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#e0f2fe"/>
+                        <stop offset="100%" stop-color="#bfdbfe"/>
+                        </linearGradient>
+                        <linearGradient id="fade1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#0369a1" stop-opacity="1"/>
+                        <stop offset="100%" stop-color="#0369a1" stop-opacity="0.2"/>
+                        </linearGradient>
+                        <linearGradient id="fade2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#0369a1" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#0369a1" stop-opacity="0.1"/>
+                        </linearGradient>
+                        <linearGradient id="fade3" x1="0%" y1="0%" x2="100%" y2="80%">
+                        <stop offset="0%" stop-color="#0369a1" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="#0369a1" stop-opacity="0.05"/>
+                        </linearGradient>
+                    </defs>
+
+                    <rect width="64" height="64" rx="14" ry="14" fill="white"/>
+
+                    <!-- Left pillar (client) -->
+                    <rect x="10" y="12" width="12" height="40" rx="3" fill="#0369a1"/>
+                    <rect x="12" y="15" width="8" height="6" rx="1" fill="#e0f2fe" opacity="0.5"/>
+
+                    <!-- Right pillar (server) -->
+                    <rect x="42" y="12" width="12" height="40" rx="3" fill="#0f172a"/>
+                    <circle cx="48" cy="18" r="1.5" fill="#e0f2fe" opacity="0.6"/>
+                    <circle cx="48" cy="23" r="1.5" fill="#e0f2fe" opacity="0.6"/>
+                    <circle cx="48" cy="28" r="1.5" fill="#e0f2fe" opacity="0.6"/>
+
+                    <!-- Staggered fading crossbars -->
+                    <rect x="22" y="29" width="20" height="6" rx="1" fill="url(#fade1)" opacity="0.8"/>
+                    <rect x="22" y="36" width="17" height="5" rx="2" fill="url(#fade2)"/>
+                    <rect x="22" y="42" width="13" height="5" rx="2" fill="url(#fade3)"/>
+
+                    <!-- Magnifying glass (bottom-right corner, overlapping) -->
+                    <!-- Lens circle -->
+                    <circle cx="46" cy="46" r="8" fill="white" opacity="0.92"/>
+                    <circle cx="46" cy="46" r="8" fill="none" stroke="#0369a1" stroke-width="2.2"/>
+                    <!-- Inner highlight dot -->
+                    <circle cx="44" cy="44" r="1.2" fill="#0369a1" opacity="0.3"/>
+                    <!-- Handle -->
+                    <line x1="52" y1="52" x2="57" y2="57" stroke="#0369a1" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </a>
                 <!-- PRELOADED DATA - Replace the contents of this script tag with your JSON or HAR data -->
                 <script id="preloadData" type="application/json"></script>
                 <div class="vertical-separator"></div>
@@ -1028,52 +1087,52 @@
         <div id="empty" class="empty-state">
             <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
                 <div style="display: flex; flex-direction: row;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100" height="100">
-                <defs>
-                    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#e0f2fe"/>
-                    <stop offset="100%" stop-color="#bfdbfe"/>
-                    </linearGradient>
-                    <linearGradient id="fade1" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#0369a1" stop-opacity="1"/>
-                    <stop offset="100%" stop-color="#0369a1" stop-opacity="0.2"/>
-                    </linearGradient>
-                    <linearGradient id="fade2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#0369a1" stop-opacity="0.8"/>
-                    <stop offset="100%" stop-color="#0369a1" stop-opacity="0.1"/>
-                    </linearGradient>
-                    <linearGradient id="fade3" x1="0%" y1="0%" x2="100%" y2="80%">
-                    <stop offset="0%" stop-color="#0369a1" stop-opacity="0.5"/>
-                    <stop offset="100%" stop-color="#0369a1" stop-opacity="0.05"/>
-                    </linearGradient>
-                </defs>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100" height="100">
+                        <defs>
+                            <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#e0f2fe"/>
+                            <stop offset="100%" stop-color="#bfdbfe"/>
+                            </linearGradient>
+                            <linearGradient id="fade1" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#0369a1" stop-opacity="1"/>
+                            <stop offset="100%" stop-color="#0369a1" stop-opacity="0.2"/>
+                            </linearGradient>
+                            <linearGradient id="fade2" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#0369a1" stop-opacity="0.8"/>
+                            <stop offset="100%" stop-color="#0369a1" stop-opacity="0.1"/>
+                            </linearGradient>
+                            <linearGradient id="fade3" x1="0%" y1="0%" x2="100%" y2="80%">
+                            <stop offset="0%" stop-color="#0369a1" stop-opacity="0.5"/>
+                            <stop offset="100%" stop-color="#0369a1" stop-opacity="0.05"/>
+                            </linearGradient>
+                        </defs>
 
-                <rect width="64" height="64" rx="14" ry="14" fill="white"/>
+                        <rect width="64" height="64" rx="14" ry="14" fill="white"/>
 
-                <!-- Left pillar (client) -->
-                <rect x="10" y="12" width="12" height="40" rx="3" fill="#0369a1"/>
-                <rect x="12" y="15" width="8" height="6" rx="1" fill="#e0f2fe" opacity="0.5"/>
+                        <!-- Left pillar (client) -->
+                        <rect x="10" y="12" width="12" height="40" rx="3" fill="#0369a1"/>
+                        <rect x="12" y="15" width="8" height="6" rx="1" fill="#e0f2fe" opacity="0.5"/>
 
-                <!-- Right pillar (server) -->
-                <rect x="42" y="12" width="12" height="40" rx="3" fill="#0f172a"/>
-                <circle cx="48" cy="18" r="1.5" fill="#e0f2fe" opacity="0.6"/>
-                <circle cx="48" cy="23" r="1.5" fill="#e0f2fe" opacity="0.6"/>
-                <circle cx="48" cy="28" r="1.5" fill="#e0f2fe" opacity="0.6"/>
+                        <!-- Right pillar (server) -->
+                        <rect x="42" y="12" width="12" height="40" rx="3" fill="#0f172a"/>
+                        <circle cx="48" cy="18" r="1.5" fill="#e0f2fe" opacity="0.6"/>
+                        <circle cx="48" cy="23" r="1.5" fill="#e0f2fe" opacity="0.6"/>
+                        <circle cx="48" cy="28" r="1.5" fill="#e0f2fe" opacity="0.6"/>
 
-                <!-- Staggered fading crossbars -->
-                <rect x="22" y="29" width="20" height="6" rx="1" fill="url(#fade1)" opacity="0.8"/>
-                <rect x="22" y="36" width="17" height="5" rx="2" fill="url(#fade2)"/>
-                <rect x="22" y="42" width="13" height="5" rx="2" fill="url(#fade3)"/>
+                        <!-- Staggered fading crossbars -->
+                        <rect x="22" y="29" width="20" height="6" rx="1" fill="url(#fade1)" opacity="0.8"/>
+                        <rect x="22" y="36" width="17" height="5" rx="2" fill="url(#fade2)"/>
+                        <rect x="22" y="42" width="13" height="5" rx="2" fill="url(#fade3)"/>
 
-                <!-- Magnifying glass (bottom-right corner, overlapping) -->
-                <!-- Lens circle -->
-                <circle cx="46" cy="46" r="8" fill="white" opacity="0.92"/>
-                <circle cx="46" cy="46" r="8" fill="none" stroke="#0369a1" stroke-width="2.2"/>
-                <!-- Inner highlight dot -->
-                <circle cx="44" cy="44" r="1.2" fill="#0369a1" opacity="0.3"/>
-                <!-- Handle -->
-                <line x1="52" y1="52" x2="57" y2="57" stroke="#0369a1" stroke-width="2.5" stroke-linecap="round"/>
-                </svg>
+                        <!-- Magnifying glass (bottom-right corner, overlapping) -->
+                        <!-- Lens circle -->
+                        <circle cx="46" cy="46" r="8" fill="white" opacity="0.92"/>
+                        <circle cx="46" cy="46" r="8" fill="none" stroke="#0369a1" stroke-width="2.2"/>
+                        <!-- Inner highlight dot -->
+                        <circle cx="44" cy="44" r="1.2" fill="#0369a1" opacity="0.3"/>
+                        <!-- Handle -->
+                        <line x1="52" y1="52" x2="57" y2="57" stroke="#0369a1" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
                     <div style="text-align: left; margin-left: 20px; margin-bottom: 20px; width: 280px;">
                         <div style="font-size: 28px; font-weight: bold; color: #4fc3f7; margin-bottom: 8px;">HAR-Viewer</div>
                         <div style="font-size: 14px; color: #888;">Visualize and analyze HTTP requests from HAR archives or our custom JSON format.</div>
@@ -1540,6 +1599,11 @@
                     } else {
                         processData(data);
                     }
+                    // Hide file input and show harviewer.com link when using preloaded data
+                    const fileInputWrapper = document.querySelector('.file-input-wrapper');
+                    const harviewerLink = document.getElementById('harviewerLink');
+                    if (fileInputWrapper) fileInputWrapper.style.display = 'none';
+                    if (harviewerLink) harviewerLink.style.display = 'flex';
                 } catch (err) {
                     showError('Failed to parse preloaded data: ' + err.message);
                 }
