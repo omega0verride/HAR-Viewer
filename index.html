@@ -4582,6 +4582,7 @@
         }
         
         document.addEventListener('keydown', e => {
+            const isInput = document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA';
             if (e.key === 'Escape') {
                 if (document.getElementById('exportDialogBackdrop').classList.contains('active')) {
                     closeFiddlerExportDialog();
@@ -4592,9 +4593,11 @@
                 closeBodyModal();
                 clearAllSelections();
             }
-            if (e.key === '+' || e.key === '=') zoomIn();
-            if (e.key === '-' || e.key === '_') zoomOut();
-            if ((e.ctrlKey || e.metaKey) && e.key === 'a' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+            if (!isInput) {
+                if (e.key === '+' || e.key === '=') zoomIn();
+                if (e.key === '-' || e.key === '_') zoomOut();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'a' && !isInput) {
                 e.preventDefault();
                 selectAllRows();
             }
