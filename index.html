@@ -4185,19 +4185,26 @@
 
         function openFiddlerExportDialog() {
             const backdrop = document.getElementById('exportDialogBackdrop');
-            const scopeSelectedRadio = document.getElementById('exportScopeSelected');
             const scopeInfo = document.getElementById('exportScopeInfo');
-            const scopeSelectedLabel = scopeSelectedRadio.parentElement;
             const selCount = selectedRows.size;
             const totalCount = filteredRequests.length;
 
+            let scopeSelectedLabel;
             if (selCount > 0) {
-                scopeSelectedRadio.disabled = false;
+                scopeSelectedLabel = document.querySelector('label[for="exportScopeSelected"]');
+                if (!scopeSelectedLabel) {
+                    scopeSelectedLabel = document.getElementById('exportScopeSelected').parentElement;
+                }
                 scopeSelectedLabel.style.color = '#ccc';
-                scopeSelectedLabel.innerHTML = `<input type="radio" name="exportScope" value="selected" id="exportScopeSelected" disabled> Selected requests only (${selCount})`;
+                scopeSelectedLabel.innerHTML = `<input type="radio" name="exportScope" value="selected" id="exportScopeSelected"> Selected requests only (${selCount})`;
+                const scopeSelectedRadio = document.getElementById('exportScopeSelected');
+                scopeSelectedRadio.disabled = false;
                 scopeInfo.textContent = `${totalCount} filtered requests available, ${selCount} selected.`;
             } else {
-                scopeSelectedRadio.disabled = true;
+                scopeSelectedLabel = document.querySelector('label[for="exportScopeSelected"]');
+                if (!scopeSelectedLabel) {
+                    scopeSelectedLabel = document.getElementById('exportScopeSelected').parentElement;
+                }
                 scopeSelectedLabel.style.color = '#666';
                 scopeSelectedLabel.innerHTML = `<input type="radio" name="exportScope" value="selected" id="exportScopeSelected" disabled> Selected requests only`;
                 document.querySelector('input[name="exportScope"][value="all"]').checked = true;
