@@ -4187,16 +4187,19 @@
             const backdrop = document.getElementById('exportDialogBackdrop');
             const scopeSelectedRadio = document.getElementById('exportScopeSelected');
             const scopeInfo = document.getElementById('exportScopeInfo');
+            const scopeSelectedLabel = scopeSelectedRadio.parentElement;
             const selCount = selectedRows.size;
             const totalCount = filteredRequests.length;
 
             if (selCount > 0) {
                 scopeSelectedRadio.disabled = false;
-                scopeSelectedRadio.parentElement.style.color = '#ccc';
+                scopeSelectedLabel.style.color = '#ccc';
+                scopeSelectedLabel.innerHTML = `<input type="radio" name="exportScope" value="selected" id="exportScopeSelected" disabled> Selected requests only (${selCount})`;
                 scopeInfo.textContent = `${totalCount} filtered requests available, ${selCount} selected.`;
             } else {
                 scopeSelectedRadio.disabled = true;
-                scopeSelectedRadio.parentElement.style.color = '#666';
+                scopeSelectedLabel.style.color = '#666';
+                scopeSelectedLabel.innerHTML = `<input type="radio" name="exportScope" value="selected" id="exportScopeSelected" disabled> Selected requests only`;
                 document.querySelector('input[name="exportScope"][value="all"]').checked = true;
                 scopeInfo.textContent = `${totalCount} filtered requests available. Select rows to enable "Selected only" export.`;
             }
