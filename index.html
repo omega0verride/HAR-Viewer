@@ -1733,7 +1733,7 @@
         function getBodyCell(chunks, bodyPath, type, id, size) {
             const sizeLabel = `<div style="font-size:11px;color:#888;line-height:1;margin-top:1px;">${formatBytes(size)}</div>`;
             if (chunks && chunks.length > 0) {
-                return `<button class="action-btn" onclick="event.stopPropagation(); showBodyContent(${id}, '${type}')">📄</button>${sizeLabel}`;
+                return `<button class="action-btn" onclick="event.stopPropagation(); showBodyContent('${id}', '${type}')">📄</button>${sizeLabel}`;
             } else if (bodyPath) {
                 return `<a class="action-btn link" href="${getFileUrl(bodyPath)}" target="_blank" onclick="event.stopPropagation()">📄</a>${sizeLabel}`;
             }
@@ -1741,7 +1741,7 @@
         }
         
         function showBodyContent(id, type) {
-            const req = allRequests.find(r => r.id === Number(id));
+            const req = allRequests.find(r => r._uid === id);
             if (!req) return;
             
             const chunks = type === 'request' ? req.requestBodyChunks : req.responseBodyChunks;
@@ -2298,6 +2298,8 @@
                 ? totalResponseTime / requests.filter(d => d.endResponseTimestamp && d.beginResponseTimestamp).length 
                 : 0;
             
+            let __uidCounter = 0;
+            const __genUid = () => 'r' + (__uidCounter++);
             allRequests = requests.map(req => {
                 const startTs = req.startRequestTimestamp;
                 const fullDt = formatTimestamp(startTs, 'table');
@@ -2346,6 +2348,7 @@
                 const type = req.type || getTypeFromContentType(contentType);
                 
                 return {
+                    _uid: __genUid(),
                     id: req.id,
                     startTs,
                     endTs: end,
@@ -2388,7 +2391,7 @@
             document.getElementById('statsTotalRequests').textContent = allRequests.length;
             const topDelayedEl = document.getElementById('statsTopDelayed');
             topDelayedEl.textContent = `ID#${topDelayed?.id || '--'} (${formatDuration(maxDuration)})`;
-            topDelayedEl.dataset.requestId = topDelayed?.id || '';
+            topDelayedEl.dataset.requestId = topDelayed ? (allRequests[topDelayedIndex]?._uid || '') : '';
             document.getElementById('statsAvgDuration').textContent = formatDuration(avgDuration);
             document.getElementById('statsAvgRequestTime').textContent = formatDuration(avgRequestTime);
             document.getElementById('statsAvgResponseTime').textContent = formatDuration(avgResponseTime);
@@ -2544,7 +2547,7 @@
                 
                 detailsHtml += `
                     <tr class="request-row"
-                        data-id="${req.id}"
+                        data-id="${req._uid}"
                         data-start="${req.startTs}"
                         data-end="${req.endTs}"
                         data-duration="${req.duration}"
@@ -2558,9 +2561,9 @@
                         <td class="duration-text" style="font-size: 12px;">${req.durationHuman}</td>
                         <td><span class="status-badge ${req.statusClass}" style="font-size: 12px; padding: 2px 7px;" title="${req.msg}">${req.status}</span></td>
                         <td style="text-align: center;"><span class="type-badge type-${(req.type || '').toLowerCase()}" title="${escapeHtml(req.type || '')}">${req.type || '-'}</span></td>
-                        <td style="text-align: center;">${getBodyCell(req.requestBodyChunks, req.requestBodyPath, 'request', req.id)}</td>
-                        <td style="text-align: center;">${getBodyCell(req.responseBodyChunks, req.responseBodyPath, 'response', req.id, req.responseContentLength)}</td>
-                        <td style="text-align: center;"><button class="action-btn" onclick="event.stopPropagation(); showHeaders(${req.id})">📚</button></td>
+                        <td style="text-align: center;">${getBodyCell(req.requestBodyChunks, req.requestBodyPath, 'request', req._uid)}</td>
+                        <td style="text-align: center;">${getBodyCell(req.responseBodyChunks, req.responseBodyPath, 'response', req._uid, req.responseContentLength)}</td>
+                        <td style="text-align: center;"><button class="action-btn" onclick="event.stopPropagation(); showHeaders('${req._uid}')">📚</button></td>
                         <td class="endpoint-cell" style="font-size: 12px;" onmouseenter="showUriTooltipFromData(event, this)" onmouseleave="hideUriTooltip()" data-original-uri="${escapeHtml(req.uri).replace(/"/g, '&quot;')}">
                             ${escapeHtml(getDisplayUri(req.uri))}
                         </td>
@@ -2571,10 +2574,10 @@
                 const showBadge = displayWidth > 25;
                 
                 timelineHtml += `
-                    <div class="timeline-column" data-id="${req.id}">
-                        <div class="timeline-bar ${req.statusClass} ${isExaggerated ? 'exaggerated' : ''}" 
+                    <div class="timeline-column" data-id="${req._uid}">
+                        <div class="timeline-bar ${req.statusClass} ${isExaggerated ? 'exaggerated' : ''}"
                              style="left: ${leftPx}px; width: ${displayWidth}px;"
-                             data-id="${req.id}"
+                             data-id="${req._uid}"
                              data-start="${req.startTs}"
                              data-end="${req.endTs}"
                              title="${req.endpoint} - ${req.durationHuman}">
@@ -3193,10 +3196,10 @@
         }
         
         function showHeaders(id) {
-            const req = allRequests.find(r => r.id === id);
+            const req = allRequests.find(r => r._uid === id);
             if (!req) return;
-            
-            document.getElementById('headersTitle').textContent = `Headers - Request ID ${id}`;
+
+            document.getElementById('headersTitle').textContent = `Headers - Request ID ${req.id}`;
             
             const reqHeaders = req.requestHeaders || {};
             const resHeaders = req.responseHeaders || {};
@@ -3264,10 +3267,10 @@
         }
 
         function openDetailPanel(id) {
-            const req = allRequests.find(r => r.id === Number(id));
+            const req = allRequests.find(r => r._uid === id);
             if (!req) return;
-            
-            const ordinalIndex = filteredRequests.findIndex(r => r.id === req.id);
+
+            const ordinalIndex = filteredRequests.findIndex(r => r._uid === req._uid);
             const ordinal = ordinalIndex >= 0 ? ordinalIndex + 1 : req.id;
             
             const threadId = req.threadId || req.threadName || '--';
@@ -3513,7 +3516,9 @@
         function simulateRowClick(row) {
             const id = row.dataset.id;
             const timelineCol = document.querySelector(`.timeline-column[data-id="${id}"]`);
-            
+            const allRows = Array.from(document.querySelectorAll('.request-row'));
+            const ordinalLabel = '#' + (allRows.indexOf(row) + 1);
+
             if (!selectionState) {
                 selectionState = 'start';
                 startBar = row;
@@ -3521,14 +3526,14 @@
                 if (timelineCol) timelineCol.classList.add('selected-start');
                 highlightBarById(id, 'selected-start');
                 document.getElementById('measurePanel').classList.add('active');
-                document.getElementById('measureStartId').textContent = 'ID ' + id;
+                document.getElementById('measureStartId').textContent = ordinalLabel;
             } else if (selectionState === 'start') {
                 selectionState = 'end';
                 endBar = row;
                 row.classList.add('selected-end');
                 if (timelineCol) timelineCol.classList.add('selected-end');
                 highlightBarById(id, 'selected-end');
-                document.getElementById('measureEndId').textContent = 'ID ' + id;
+                document.getElementById('measureEndId').textContent = ordinalLabel;
                 
                 const startTs = parseInt(startBar.dataset.start);
                 const endTs = parseInt(row.dataset.end);
@@ -3872,7 +3877,7 @@
                 const rows = document.querySelectorAll('.request-row');
                 for (const row of rows) {
                     if (row.offsetTop >= oldScrollTop) {
-                        firstVisibleId = parseInt(row.dataset.id);
+                        firstVisibleId = row.dataset.id;
                         break;
                     }
                 }
@@ -3950,7 +3955,7 @@
             // Find the first matching request to scroll to
             let scrollToId = null;
             if (firstVisibleId !== null) {
-                const found = filteredRequests.find(r => r.id === firstVisibleId);
+                const found = filteredRequests.find(r => r._uid === firstVisibleId);
                 if (found) {
                     scrollToId = firstVisibleId;
                 }
