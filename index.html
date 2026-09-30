@@ -44,14 +44,16 @@
             --c-0xx: #9e9e9e;
             --c-6xx: #ce93d8;
 
-            --radius-sm: 4px;
-            --radius: 6px;
-            --radius-lg: 10px;
+            --radius-sm: 2px;
+            --radius: 3px;
+            --radius-lg: 8px;
             --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--border-strong);
 
             --row-h: 40px;
             --head-h: 36px;
             --control-h: 28px;
+            --control-border: #3a4047;
+            --control-border-hover: #4b525b;
         }
 
         * { box-sizing: border-box; }
@@ -88,18 +90,93 @@
         .btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
             height: var(--control-h);
-            padding: 0 12px;
-            background: var(--surface-3);
-            color: var(--text);
-            border: 1px solid var(--border-strong);
+            padding: 0 11px;
+            background: var(--surface-2);
+            color: var(--text-2);
+            border: 1px solid var(--control-border);
             border-radius: var(--radius);
             cursor: pointer;
             font-size: 12px;
             font-weight: 500;
             white-space: nowrap;
-            transition: background 0.15s, border-color 0.15s, color 0.15s;
         }
-        .btn:hover { background: var(--surface-4); border-color: #434952; }
+        .btn:hover { background: var(--surface-3); border-color: var(--control-border-hover); color: var(--text); }
+        .btn:active { background: var(--surface-4); }
+
+        /* ------------------------------------------------------------------
+           Form controls — flat: 1px border, no glow; focus = accent border.
+           Shared by the filter row, export dialog and popovers.
+           ------------------------------------------------------------------ */
+        input[type=text], select {
+            height: var(--control-h);
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--control-border);
+            border-radius: var(--radius);
+            padding: 0 8px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+            outline: none;
+        }
+        input[type=text]::placeholder { color: var(--text-faint); opacity: 1; }
+        input[type=text]:hover, select:hover { border-color: var(--control-border-hover); }
+        input[type=text]:focus, select:focus { border-color: var(--accent); background: #0b0c0e; }
+        select {
+            appearance: none; -webkit-appearance: none;
+            padding: 0 24px 0 8px;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M.5.5 4 4 7.5.5' fill='none' stroke='%238a9099' stroke-width='1.2'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+        }
+        select option { background: var(--surface-2); color: var(--text); }
+
+        input[type=checkbox], input[type=radio] {
+            appearance: none; -webkit-appearance: none;
+            flex-shrink: 0;
+            width: 14px; height: 14px;
+            margin: 0;
+            background: var(--bg);
+            border: 1px solid var(--control-border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: inline-grid; place-content: center;
+            vertical-align: middle;
+        }
+        input[type=radio] { border-radius: 50%; }
+        input[type=checkbox]:hover, input[type=radio]:hover { border-color: var(--control-border-hover); }
+        input[type=checkbox]:checked { background: var(--accent); border-color: var(--accent); }
+        input[type=checkbox]:checked::before {
+            content: ''; width: 8px; height: 5px; margin-top: -2px;
+            border: solid var(--accent-contrast); border-width: 0 0 1.5px 1.5px;
+            transform: rotate(-45deg);
+        }
+        input[type=radio]:checked { border-color: var(--accent); }
+        input[type=radio]:checked::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+        input[type=checkbox]:disabled, input[type=radio]:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        input[type=range] {
+            appearance: none; -webkit-appearance: none;
+            height: 16px;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type=range]::-webkit-slider-runnable-track { height: 2px; background: var(--control-border); border-radius: 1px; }
+        input[type=range]::-moz-range-track { height: 2px; background: var(--control-border); border-radius: 1px; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 8px; height: 14px; margin-top: -6px;
+            background: var(--text-2);
+            border: none; border-radius: var(--radius-sm);
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 8px; height: 14px;
+            background: var(--text-2);
+            border: none; border-radius: var(--radius-sm);
+        }
+        input[type=range]:hover::-webkit-slider-thumb, input[type=range]:focus-visible::-webkit-slider-thumb { background: var(--text); }
+        input[type=range]:hover::-moz-range-thumb, input[type=range]:focus-visible::-moz-range-thumb { background: var(--text); }
+        input[type=range]:focus-visible { outline: none; }
 
         .file-selector { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
 
@@ -121,7 +198,6 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.15s;
         }
         .file-input-wrapper:hover::after { background: var(--accent-hover); }
         .file-input-wrapper input[type=file] {
@@ -170,25 +246,6 @@
         /* Separators between filters act as spacing only; the first one (after "Open") stays visible */
         .filter-row .vertical-separator { background: transparent; width: 0; margin: 0 6px; height: var(--control-h); }
         .filter-row #preloadData + .vertical-separator { background: var(--border-strong); width: 1px; margin: 0 16px 0 14px; height: 36px; }
-        .filter-row input, .filter-row select {
-            height: var(--control-h);
-            background: var(--bg);
-            color: var(--text);
-            border: 1px solid var(--border-strong);
-            padding: 0 9px;
-            border-radius: var(--radius);
-            font-size: 12px;
-            font-family: var(--font-mono);
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
-        .filter-row select { font-family: var(--font-ui); padding: 0 6px; cursor: pointer; }
-        .filter-row input::placeholder { color: var(--text-faint); }
-        .filter-row input:hover, .filter-row select:hover { border-color: #434952; }
-        .filter-row input:focus, .filter-row select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
         .filter-row label { font-size: 11px; color: var(--text-muted); }
         .filter-row .btn { font-size: 12px; }
 
@@ -200,9 +257,8 @@
         }
         .filter-group label {
             font-size: 11px;
-            font-weight: 500;
+            font-weight: 400;
             color: var(--text-muted);
-            letter-spacing: 0.01em;
             padding-left: 1px;
             line-height: 1;
         }
@@ -216,6 +272,7 @@
             align-items: center;
         }
         .filter-group .uri-input-row input { border-radius: var(--radius) 0 0 var(--radius); }
+        .filter-group .uri-input-row input:focus { position: relative; z-index: 1; }
         .filter-group .uri-input-row .regex-toggle {
             border-radius: 0 var(--radius) var(--radius) 0;
             margin-left: -1px;
@@ -223,21 +280,22 @@
         .filter-row .regex-toggle {
             height: var(--control-h);
             background: var(--surface-2);
-            color: var(--text-faint);
-            border: 1px solid var(--border-strong);
-            padding: 0 10px;
+            color: var(--text-muted);
+            border: 1px solid var(--control-border);
+            padding: 0 9px;
             border-radius: var(--radius);
             cursor: pointer;
             font-size: 12px;
             font-family: var(--font-mono);
-            transition: all 0.15s;
         }
-        .filter-row .regex-toggle:hover { color: var(--text); }
+        .filter-row .regex-toggle:hover { color: var(--text); background: var(--surface-3); }
         .filter-row .regex-toggle.active {
-            background: var(--accent-soft);
-            color: var(--accent);
+            background: var(--accent);
+            color: var(--accent-contrast);
             border-color: var(--accent);
+            font-weight: 600;
             position: relative;
+            z-index: 2;
         }
 
         #clearFiltersBtn { color: var(--text-2); }
@@ -251,17 +309,16 @@
             height: var(--control-h);
             background: var(--surface-2);
             color: var(--text-2);
-            border: 1px solid var(--border-strong);
-            padding: 0 10px;
+            border: 1px solid var(--control-border);
+            padding: 0 11px;
             border-radius: var(--radius);
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             white-space: nowrap;
-            transition: border-color 0.15s, color 0.15s, background 0.15s;
         }
-        .sticky-picker-btn:hover { background: var(--surface-3); color: var(--text); }
-        .sticky-picker-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+        .sticky-picker-btn:hover { background: var(--surface-3); border-color: var(--control-border-hover); color: var(--text); }
+        .sticky-picker-btn.active { border-color: var(--accent); color: var(--text); background: var(--surface-3); }
         .sticky-picker-popover {
             display: none;
             position: absolute;
@@ -283,7 +340,7 @@
             transition: background 0.1s;
         }
         .sticky-picker-popover label:hover { background: var(--surface-3); color: var(--text); }
-        .sticky-picker-popover input[type=checkbox] { accent-color: var(--accent); cursor: pointer; margin: 0; }
+        
 
         .github-link {
             position: fixed;
@@ -368,29 +425,23 @@
             gap: 6px;
             align-items: center;
         }
-        .zoom-controls input[type="range"] {
-            width: 180px;
-            cursor: pointer;
-            accent-color: var(--accent);
-            margin: 0 4px;
-        }
+        .zoom-controls input[type="range"] { width: 180px; margin: 0 6px; }
         #zoomValue { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); min-width: 44px; text-align: right; }
         .zoom-controls .zoom-step { width: var(--control-h); padding: 0; font-size: 15px; }
         .zoom-btn {
             height: var(--control-h);
-            background: var(--surface-3);
-            color: var(--text);
-            border: 1px solid var(--border-strong);
-            padding: 0 12px;
+            background: var(--surface-2);
+            color: var(--text-2);
+            border: 1px solid var(--control-border);
+            padding: 0 11px;
             border-radius: var(--radius);
             cursor: pointer;
             font-size: 12px;
             font-weight: 500;
-            transition: background 0.15s;
             min-width: 45px;
             white-space: nowrap;
         }
-        .zoom-btn:hover { background: var(--surface-4); }
+        .zoom-btn:hover { background: var(--surface-3); border-color: var(--control-border-hover); color: var(--text); }
         .zoom-btn:disabled {
             background: transparent;
             color: var(--text-faint);
@@ -1213,8 +1264,7 @@
             display: flex; align-items: center; gap: 5px;
             cursor: pointer; color: var(--text-2); font-size: 11px;
         }
-        .body-toolbar input[type=checkbox] { accent-color: var(--accent); margin: 0; }
-
+        
         .format-btn {
             display: inline-flex;
             align-items: center;
@@ -1230,7 +1280,7 @@
             transition: background 0.1s, color 0.1s;
         }
         .format-btn:hover { background: var(--surface-3); color: var(--text); border-color: transparent; }
-        .format-btn.active { background: var(--accent-soft); color: var(--accent); border-color: rgba(91, 157, 255, 0.35); }
+        .format-btn.active { background: var(--surface-4); color: var(--text); border-color: var(--control-border-hover); }
 
         #bodyContent {
             background: var(--bg);
@@ -1357,7 +1407,6 @@
             cursor: pointer; color: var(--text-2); font-size: 11px;
             margin-left: auto; text-transform: none; letter-spacing: 0; font-weight: 400;
         }
-        .detail-body-toolbar input[type=checkbox] { accent-color: var(--accent); margin: 0; }
         .detail-path-link { color: var(--accent); word-break: break-all; font-family: var(--font-mono); font-size: 11px; }
 
         .detail-backdrop {
@@ -1414,42 +1463,21 @@
         .export-dialog-section > .export-option:first-of-type { border-top-left-radius: var(--radius); border-top-right-radius: var(--radius); }
         .export-dialog-section > .export-option:last-of-type { border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius); margin-bottom: 0; }
         .export-option label { flex: 1; color: var(--text); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .export-option input[type="checkbox"], .export-option input[type="radio"] { cursor: pointer; accent-color: var(--accent); margin: 0; }
         .export-option-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
         .export-option-2col label {
             display: grid; grid-template-columns: auto 1fr 1.2fr; align-items: center; gap: 8px;
         }
         .export-option-2col .export-option-desc { margin-top: 0; }
-        #exportPath {
-            background: var(--bg) !important;
-            color: var(--text) !important;
-            height: 30px;
-            padding: 0 10px !important;
-            border-radius: var(--radius) !important;
-            font-family: var(--font-mono) !important;
-            outline: none;
-        }
-        #exportPath:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px var(--accent-soft); }
+        #exportPath { height: 30px; }
+        #exportPath:focus { border-color: var(--accent) !important; }
         .export-header-row {
             display: flex; gap: 6px; padding: 3px 0; align-items: center;
         }
-        .export-header-row input[type="text"] {
-            flex: 1;
-            height: 28px;
-            background: var(--bg);
-            border: 1px solid var(--border-strong);
-            color: var(--text);
-            padding: 0 8px;
-            border-radius: var(--radius);
-            font-size: 12px;
-            font-family: var(--font-mono);
-            outline: none;
-        }
-        .export-header-row input[type="text"]:focus { border-color: var(--accent); }
+        .export-header-row input[type="text"] { flex: 1; min-width: 0; }
         .export-header-row .remove-btn {
             width: 28px; height: 28px;
             background: transparent;
-            border: 1px solid var(--border-strong);
+            border: 1px solid var(--control-border);
             color: var(--text-muted);
             border-radius: var(--radius);
             cursor: pointer;
@@ -1459,7 +1487,7 @@
         .export-add-header-btn {
             height: 28px;
             background: transparent;
-            border: 1px dashed var(--border-strong);
+            border: 1px dashed var(--control-border);
             color: var(--text-2);
             padding: 0 12px;
             border-radius: var(--radius);
@@ -1519,23 +1547,26 @@
                 background: var(--accent); box-shadow: 0 0 0 2px var(--surface);
             }
 
+            /* Menu sheet: 2-column grid, fields reordered with `order` (DOM untouched).
+               Handle → Open file / Clear → fields → Stats / Export → Close. */
             #content .filter-row { display: none; }
             #content.menu-open .filter-row {
-                display: flex;
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                align-items: end;
+                gap: 14px 10px;
                 position: fixed;
                 left: 0; right: 0; bottom: 0;
                 max-height: 85vh;
                 overflow-y: auto;
-                flex-direction: column;
-                flex-wrap: nowrap;
-                align-items: stretch;
-                gap: 12px;
-                padding: 0 16px 16px;
+                overscroll-behavior: contain;
+                padding: 0 16px calc(16px + env(safe-area-inset-bottom));
                 border: none;
+                border-top: 1px solid var(--border-strong);
                 border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-                box-shadow: var(--shadow-pop);
+                box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.5);
                 z-index: 1600;
-                animation: sheet-up 0.2s ease-out;
+                animation: sheet-up 0.18s ease-out;
             }
             #content.menu-open .mobile-menu-backdrop {
                 display: block;
@@ -1544,40 +1575,58 @@
                 z-index: 1550;
             }
             .filter-row .vertical-separator { display: none !important; }
-            .filter-row .filter-group input,
-            .filter-row .filter-group select { width: 100% !important; font-size: 16px; height: 36px; }
-            .filter-group .uri-input-row .regex-toggle { height: 36px; }
-            .filter-group .duration-inputs input { flex: 1; min-width: 0; }
-            .filter-row .file-input-wrapper,
-            .filter-row .harviewer-link,
-            .filter-row .sticky-picker-wrap,
-            .filter-row #clearFiltersBtn { align-self: flex-start; }
 
             .mobile-menu-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                position: sticky; top: 0; z-index: 1;
-                margin: 0 -16px;
-                padding: 12px 16px;
-                background: var(--surface);
-                border-bottom: 1px solid var(--border);
-                font-size: 11px; font-weight: 600;
-                text-transform: uppercase; letter-spacing: 0.08em;
-                color: var(--text-muted);
+                display: block;
+                grid-column: 1 / -1;
+                order: 0;
+                height: 4px; width: 36px;
+                margin: 8px auto 0;
+                border-radius: 2px;
+                background: var(--surface-4);
             }
-            .mobile-menu-close {
-                width: 32px; height: 32px;
-                background: transparent; border: none; border-radius: var(--radius);
-                color: var(--text-muted); font-size: 20px; cursor: pointer;
-            }
-            .mobile-menu-close:hover { background: var(--surface-3); color: var(--text); }
+            .filter-row .file-input-wrapper { order: 1; grid-column: 1; justify-self: start; align-self: center; }
+            .filter-row .harviewer-link { display: none !important; }
+            .filter-row #clearFiltersBtn { order: 1; grid-column: 2; justify-self: end; align-self: center; }
+            .filter-row .fg-method   { order: 2; }
+            .filter-row .fg-type     { order: 3; }
+            .filter-row .fg-uri      { order: 4; grid-column: 1 / -1; }
+            .filter-row .fg-status   { order: 5; grid-column: 1 / -1; }
+            .filter-row .fg-thread   { order: 6; }
+            .filter-row .fg-duration { order: 7; }
+            .filter-row .fg-baseuri  { order: 8; grid-column: 1 / -1; }
+            .filter-row .fg-timezone { order: 9; }
+            .filter-row .sticky-picker-wrap { order: 10; }
+            .filter-row .sticky-picker-btn { width: 100%; height: 38px; font-size: 13px; }
+            .sticky-picker-popover { top: auto; bottom: calc(100% + 6px); left: auto; right: 0; }
+
+            .filter-row .filter-group { gap: 6px; min-width: 0; }
+            .filter-row .filter-group label { font-size: 12px; }
+            .filter-row .filter-group input,
+            .filter-row .filter-group select { width: 100% !important; font-size: 16px; height: 38px; padding: 0 10px; }
+            .filter-row .filter-group select { padding-right: 28px; }
+            .filter-group .uri-input-row .regex-toggle { height: 38px; padding: 0 12px; }
+            .filter-group .duration-inputs input { flex: 1; min-width: 0; }
+            .filter-row .file-input-wrapper::after { height: 32px; }
+            .filter-row #clearFiltersBtn { height: 32px; }
+
             .mobile-menu-actions {
-                display: flex; gap: 8px;
-                padding-top: 12px;
+                order: 20;
+                grid-column: 1 / -1;
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                gap: 8px;
+                margin-top: 2px;
+                padding-top: 14px;
                 border-top: 1px solid var(--border);
             }
-            .mobile-menu-actions .btn { flex: 1; height: 36px; }
+            .mobile-menu-actions .btn { height: 40px; padding: 0 8px; min-width: 0; }
+            .mobile-menu-actions .mobile-menu-close {
+                grid-column: 1 / -1;
+                background: var(--surface-3);
+                color: var(--text);
+                border-color: var(--control-border-hover);
+            }
 
             .stats-popup { left: 12px; right: 12px; bottom: 84px; width: auto; max-width: none; }
             .measure-panel { bottom: 84px; max-width: calc(100vw - 24px); }
@@ -1603,10 +1652,7 @@
         <div id="content">
             <div class="mobile-menu-backdrop" onclick="toggleMobileMenu(false)"></div>
             <div class="filter-row" id="filterRow">
-                <div class="mobile-menu-header">
-                    <span>Menu</span>
-                    <button class="mobile-menu-close" onclick="toggleMobileMenu(false)" title="Close menu">×</button>
-                </div>
+                <div class="mobile-menu-header" aria-hidden="true"></div>
                 <div class="file-input-wrapper">
                     <input type="file" id="fileInput" accept=".json,.har">
                 </div>
@@ -1616,12 +1662,12 @@
                 <!-- PRELOADED DATA - Replace the contents of this script tag with your JSON or HAR data -->
                 <script id="preloadData" type="application/json"></script>
                 <div class="vertical-separator"></div>
-                <div class="filter-group">
+                <div class="filter-group fg-method">
                     <label>Method</label>
                     <input type="text" id="filterMethod" placeholder="GET,POST,PUT" oninput="applyFilter()" style="width: 100px;" title="Filter by HTTP methods. Multiple: GET,POST,PUT">
                 </div>
                 <div class="vertical-separator"></div>
-                <div class="filter-group">
+                <div class="filter-group fg-uri">
                     <label>URI</label>
                     <div class="uri-input-row">
                         <input type="text" id="filterText" placeholder="Search or regex..." oninput="applyFilter()" style="width: 220px;">
@@ -1629,17 +1675,17 @@
                     </div>
                 </div>
                 <div class="vertical-separator"></div>
-                <div class="filter-group">
+                <div class="filter-group fg-status">
                     <label>Status</label>
                     <input type="text" id="filterStatus" placeholder="e.g. 200, -1, 0, 200-299" oninput="applyFilter()" style="width: 140px;" title="Filter by status codes. Single: 200, -1. Multiple: 200,404. Range: 200-299, -10--1">
                 </div>
                 <div class="vertical-separator"></div>
-                <div class="filter-group">
+                <div class="filter-group fg-thread">
                     <label>Thread</label>
                     <input type="text" id="filterThread" placeholder="1,2,3" oninput="applyFilter()" style="width: 80px;" title="Filter by thread IDs. Multiple: 1,2,3">
                 </div>
                 <div class="vertical-separator"></div>
-                <div class="filter-group">
+                <div class="filter-group fg-duration">
                     <label>Duration</label>
                     <div class="duration-inputs">
                         <input type="text" id="filterMinDuration" placeholder="min" oninput="applyFilter()" style="width: 70px;" title="Min duration. Examples: 1h, 30m, 1m 30s">
@@ -1648,17 +1694,17 @@
                     </div>
                 </div>
                 <div class="vertical-separator"></div>
-                <div class="filter-group">
+                <div class="filter-group fg-type">
                     <label>Type</label>
                     <input type="text" id="filterType" placeholder="JSON,HTML,IMG" oninput="applyFilter()" style="width: 80px;" title="Filter by response type. Multiple: JSON,HTML,IMG">
                 </div>
                 <div class="vertical-separator"></div>
-                <div class="filter-group">
+                <div class="filter-group fg-baseuri">
                     <label>Base URI</label>
                     <input type="text" id="filterBaseUri" placeholder="e.g. http://localhost:3000/" oninput="applyFilter()" style="width: 150px;" title="Strip prefix from URIs in display only">
                 </div>
                 <div class="vertical-separator"></div>
-                <div class="filter-group">
+                <div class="filter-group fg-timezone">
                     <label>Timezone</label>
                     <select id="timezoneSelect" onchange="handleTimezoneChange()" style="width: 80px;" title="Select timezone for timestamps"></select>
                 </div>
@@ -1672,6 +1718,7 @@
                 <div class="mobile-menu-actions">
                     <button class="btn" onclick="openStatsFromMenu(event)">Stats</button>
                     <button class="btn" onclick="toggleMobileMenu(false); openFiddlerExportDialog()">Export Fiddler Rules</button>
+                    <button class="btn mobile-menu-close" onclick="toggleMobileMenu(false)">Close</button>
                 </div>
             </div>
             
@@ -1923,7 +1970,7 @@
                 <div class="export-dialog-section-title">Export Path</div>
                 <div class="export-option" style="flex-direction: column; align-items: stretch;">
                     <label style="margin-bottom: 6px;">Absolute path where the zip will be extracted</label>
-                    <input type="text" id="exportPath" placeholder="e.g. C:/Users/me/FiddlerRules" oninput="this.style.border='1px solid var(--border-strong)'; var e=this.parentElement.querySelector('.export-path-error'); if(e)e.remove();" style="border: 1px solid var(--border-strong); font-size: 12px; width: 100%; box-sizing: border-box;">
+                    <input type="text" id="exportPath" placeholder="e.g. C:/Users/me/FiddlerRules" oninput="this.style.border=''; var e=this.parentElement.querySelector('.export-path-error'); if(e)e.remove();" style="width: 100%;">
                     <div class="export-option-desc">Fiddler requires absolute file paths for response actions. This path will be prefixed to all action file references in the rules.</div>
                 </div>
             </div>
@@ -4494,7 +4541,7 @@
             const separators = document.querySelectorAll('.filter-row .vertical-separator');
             
             if (clearBtn) {
-                clearBtn.style.display = hasFilters ? 'inline-block' : 'none';
+                clearBtn.style.display = hasFilters ? '' : 'none';
             }
             const menuBtn = document.getElementById('mobileMenuBtn');
             if (menuBtn) menuBtn.classList.toggle('has-filters', !!hasFilters);
@@ -5038,7 +5085,7 @@
                 return;
             }
             // Clear any previous error state
-            exportPathInput.style.border = '1px solid var(--border-strong)';
+            exportPathInput.style.border = '';
             const prevErr = exportPathInput.parentElement.querySelector('.export-path-error');
             if (prevErr) prevErr.remove();
             // Normalize to forward slashes and ensure trailing slash
