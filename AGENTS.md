@@ -205,6 +205,14 @@ HAR-Viewer is an HTTP request timeline visualizer in a single HTML file (`index.
 ### Event Delegation
 Use event delegation instead of inline onclick handlers where possible. For click interactions on dynamically created elements, use proper delegation or unique IDs.
 
+### Styling / Design Tokens
+- All colors, radii and sizes live as CSS custom properties on `:root` (`--bg`, `--surface*`, `--border*`, `--text*`, `--accent`, `--c-1xx`…`--c-6xx`, `--row-h`, `--head-h`, `--control-h`). Use them in new CSS and in inline styles/JS (`el.style.color = 'var(--text-2)'` works).
+- Font is monospace everywhere (`--font-mono`, JetBrains Mono from Google Fonts with system mono fallbacks); `--font-ui` is an alias for it. Monospace keeps table columns and timeline labels aligned — do not switch the main font to a proportional one.
+- Method and status are rendered as **bold colored text, no badge background**. Thread badges and timeline bars keep their original saturated palette (`THREAD_COLORS`, status gradients); don't mute them.
+- `--row-h` drives both table row height (`td`) and `.timeline-column` height, and `--head-h` drives both `th` and `.timeline-header` — they must stay in sync or the table and timeline rows drift apart.
+- Sticky-column backgrounds are opaque pre-blended versions of the translucent row-state colors over `--bg`; if you change a row-state color, recompute the matching `td.sticky-col` value.
+- Table icons (body/headers) are inline SVGs, not emoji.
+
 ### CSS Classes Used
 - `.detail-panel` - main panel container
 - `.detail-panel-header` - sticky header with z-index
