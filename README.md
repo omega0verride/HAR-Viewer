@@ -39,6 +39,7 @@ That's it. Everything runs client-side in a single HTML file.
 - **Drag & drop** — drop files directly onto the page
 - **Zero dependencies** — single HTML file, no build step, no server required
 - **Dark theme** — easy on the eyes
+- **Mobile friendly** — on small screens filters, stats and export move into a bottom-sheet menu; the legend, zoom slider and Fit stay in the bottom bar
 - **Export Fiddler Rules** — export requests as Fiddler AutoResponder rules (.farx) with configurable match/response options; export all filtered or only selected requests
 
 ## Screenshots

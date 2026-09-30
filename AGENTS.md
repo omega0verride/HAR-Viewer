@@ -208,10 +208,25 @@ Use event delegation instead of inline onclick handlers where possible. For clic
 ### Styling / Design Tokens
 - All colors, radii and sizes live as CSS custom properties on `:root` (`--bg`, `--surface*`, `--border*`, `--text*`, `--accent`, `--c-1xx`…`--c-6xx`, `--row-h`, `--head-h`, `--control-h`). Use them in new CSS and in inline styles/JS (`el.style.color = 'var(--text-2)'` works).
 - Font is monospace everywhere (`--font-mono`, JetBrains Mono from Google Fonts with system mono fallbacks); `--font-ui` is an alias for it. Monospace keeps table columns and timeline labels aligned — do not switch the main font to a proportional one.
-- Method and status are rendered as **bold colored text, no badge background**. Thread badges and timeline bars keep their original saturated palette (`THREAD_COLORS`, status gradients); don't mute them.
+- Method, status and Type column are rendered as **bold colored text, no badge background** (`.type-badge` is text-only despite its name). Thread badges and timeline bars keep their saturated palette (`THREAD_COLORS`, solid status colors matching the legend swatches); don't mute them.
+- **No gradients anywhere** (user preference) — use solid colors.
+- POST method color (table `.endpoint-method.post` and detail `.detail-value.method-POST`) uses `var(--c-2xx)` so it always matches the 2xx status green. The 2xx bar/legend swatch is a darker shade of the same hue (`#2f9e5b`).
+- **Zebra rows, no row borders**: `td` and `.timeline-column` have no `border-bottom`; alternate rows get class `alt` at render time (`index % 2`) on both the `<tr>` and its `.timeline-column` so the two halves stay in sync (don't use `:nth-child` — measure markers are also children of `.timeline-scroll`). `.timeline-bar` `top` is centered on the full `--row-h` (no border to subtract).
+- Primary file buttons (`.file-input-wrapper::after` "Open file", `.select-file-btn`) use white text.
 - `--row-h` drives both table row height (`td`) and `.timeline-column` height, and `--head-h` drives both `th` and `.timeline-header` — they must stay in sync or the table and timeline rows drift apart.
 - Sticky-column backgrounds are opaque pre-blended versions of the translucent row-state colors over `--bg`; if you change a row-state color, recompute the matching `td.sticky-col` value.
 - Table icons (body/headers) are inline SVGs, not emoji.
+
+### Mobile Layout (≤768px, single `@media (max-width: 768px)` block at the end of `<style>`)
+- Hidden: shortcut hints (`.instructions-inline`), Zoom to selection (`#selBtn`), zoom −/+ steps, `#zoomValue`, bottom-bar Stats/Export buttons, GitHub corner link (when data is loaded). Hidden rules use `!important` because JS sets inline `display` on Stats/Export.
+- Bottom bar keeps the legend, zoom slider (flexes to fill) and Fit, plus a `#mobileMenuBtn` (shows an accent dot via `.has-filters`, toggled in `updateClearButtonVisibility()`).
+- The menu is the **existing `.filter-row` restyled as a fixed bottom sheet** when `#content` has class `menu-open` — no DOM moving. It contains `.mobile-menu-header` (first child) and `.mobile-menu-actions` (Stats / Export, last child); both are `display:none` on desktop. Keep new elements after `#clearFiltersBtn` separator-free: `updateClearButtonVisibility()` toggles the *last* `.vertical-separator` in the filter row.
+- `toggleMobileMenu(open?)` toggles the sheet; `openStatsFromMenu(e)` opens the (normally hover-driven) stats popup; a document click listener closes the stats popup on outside tap. Escape closes the menu first. Menu closes on file select and when leaving the breakpoint.
+- Menu inputs use 16px font to prevent iOS focus zoom.
+
+### Upload (empty state) animations
+- Empty-state columns fade up on load; drop-zone arrow (`<g class="drop-arrow">`) lifts on hover and bobs while dragging; `setUploadLoading(bool)` adds `.loading` (pulsing border/background, rising arrow, "Reading file…") around FileReader reads in both `handleFileSelect` and drag-drop `processFile`. All disabled under `prefers-reduced-motion`.
+- Empty-state children have `min-width: 0` (and `.instructions` `overflow-wrap: anywhere`) so the `<pre>` sample and drop-zone never force horizontal overflow on narrow screens.
 
 ### CSS Classes Used
 - `.detail-panel` - main panel container

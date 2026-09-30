@@ -37,7 +37,7 @@
             --mark-highlight: #facc15;
 
             --c-1xx: #80deea;
-            --c-2xx: #81c784;
+            --c-2xx: #5cc184;
             --c-3xx: #ffb74d;
             --c-4xx: #ff8a65;
             --c-5xx: #e57373;
@@ -116,7 +116,7 @@
             height: var(--control-h);
             padding: 0 14px;
             background: var(--accent);
-            color: var(--accent-contrast);
+            color: #fff;
             border-radius: var(--radius);
             font-size: 12px;
             font-weight: 600;
@@ -241,6 +241,9 @@
         }
 
         #clearFiltersBtn { color: var(--text-2); }
+
+        /* Mobile menu (filter row becomes a bottom sheet ≤768px); hidden on desktop */
+        .mobile-menu-header, .mobile-menu-actions, .mobile-menu-btn, .mobile-menu-backdrop { display: none; }
 
         /* Sticky column picker */
         .sticky-picker-wrap { position: relative; display: flex; align-items: center; }
@@ -417,7 +420,6 @@
         }
         .timeline-table td {
             padding: 4px 8px;
-            border-bottom: 1px solid var(--border);
             vertical-align: middle;
             height: var(--row-h);
             min-height: var(--row-h);
@@ -450,14 +452,17 @@
         /* Opaque backgrounds needed so scrolling content doesn't show through.
            These are the translucent row-state colors below pre-blended over --bg. */
         .timeline-table td.sticky-col                    { background: var(--bg); }
-        .request-row.hover         td.sticky-col         { background: #17191c; }
+        .request-row.alt           td.sticky-col         { background: #151618; }
+        .request-row.hover         td.sticky-col         { background: #1d1e20; }
         .request-row.selected-start td.sticky-col        { background: #1e2c41; }
         .request-row.selected-end  td.sticky-col         { background: #382230; }
         .request-row.selected      td.sticky-col         { background: #1a2433; }
         .request-row.highlight     td.sticky-col         { background: #302a12; }
 
         .request-row { cursor: pointer; transition: background 0.1s; user-select: none; }
-        .request-row.hover, .timeline-column.hover { background: rgba(255, 255, 255, 0.035); }
+        /* Zebra striping (class "alt" set per row index at render — table rows and timeline columns stay in sync) */
+        .request-row.alt, .timeline-column.alt { background: rgba(255, 255, 255, 0.025); }
+        .request-row.hover, .timeline-column.hover { background: rgba(255, 255, 255, 0.06); }
         .timeline-bar.hover { filter: brightness(1.15); }
         .request-row.selected-start, .timeline-column.selected-start { background: rgba(91, 157, 255, 0.20); }
         .request-row.selected-end, .timeline-column.selected-end { background: rgba(244, 114, 182, 0.18); }
@@ -510,29 +515,26 @@
             font-family: var(--font-mono);
         }
 
+        /* Type column: colored text only, no badge background (same treatment as method/status) */
         .type-badge {
             display: inline-block;
-            padding: 2px 5px;
-            border-radius: var(--radius-sm);
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
             font-family: var(--font-mono);
             letter-spacing: 0.02em;
-            line-height: 1.4;
-            background: var(--surface-3);
             color: var(--text-muted);
         }
-        .type-badge.type-json { color: #7fb4ff; background: rgba(91, 157, 255, 0.12); }
-        .type-badge.type-xml  { color: #f0a47a; background: rgba(240, 138, 93, 0.12); }
-        .type-badge.type-html { color: #f0a47a; background: rgba(240, 138, 93, 0.12); }
-        .type-badge.type-text { color: var(--text-2); background: var(--surface-3); }
-        .type-badge.type-img  { color: #6fd3a0; background: rgba(76, 195, 138, 0.12); }
-        .type-badge.type-js   { color: #e8c55a; background: rgba(232, 197, 90, 0.12); }
-        .type-badge.type-css  { color: #6ec5e8; background: rgba(86, 182, 226, 0.12); }
-        .type-badge.type-font { color: #c3a6f5; background: rgba(177, 140, 240, 0.12); }
-        .type-badge.type-pdf  { color: #f38b8b; background: rgba(239, 91, 91, 0.12); }
-        .type-badge.type-arch { color: #e5b86b; background: rgba(229, 165, 75, 0.12); }
-        .type-badge.type-bin  { color: var(--text-2); background: var(--surface-4); }
+        .type-badge.type-json { color: #7fb4ff; }
+        .type-badge.type-xml  { color: #f0a47a; }
+        .type-badge.type-html { color: #f0a47a; }
+        .type-badge.type-text { color: var(--text-2); }
+        .type-badge.type-img  { color: #6fd3a0; }
+        .type-badge.type-js   { color: #e8c55a; }
+        .type-badge.type-css  { color: #6ec5e8; }
+        .type-badge.type-font { color: #c3a6f5; }
+        .type-badge.type-pdf  { color: #f38b8b; }
+        .type-badge.type-arch { color: #e5b86b; }
+        .type-badge.type-bin  { color: var(--text-2); }
 
         .duration-text { font-family: var(--font-mono); font-size: 11px; color: var(--text-2); }
 
@@ -554,7 +556,7 @@
             color: var(--text-2);
         }
         .endpoint-method.get    { color: #64b5f6; }
-        .endpoint-method.post   { color: #81c784; }
+        .endpoint-method.post   { color: var(--c-2xx); }
         .endpoint-method.put    { color: #ffb74d; }
         .endpoint-method.delete { color: #e57373; }
         .endpoint-method.patch  { color: #ba68c8; }
@@ -603,7 +605,6 @@
         .timeline-column {
             position: relative;
             height: var(--row-h);
-            border-bottom: 1px solid var(--border);
             transition: background 0.1s;
             box-sizing: border-box;
         }
@@ -611,7 +612,7 @@
         .timeline-bar {
             position: absolute;
             height: 22px;
-            top: calc((var(--row-h) - 1px - 22px) / 2);
+            top: calc((var(--row-h) - 22px) / 2);
             border-radius: var(--radius-sm);
             cursor: pointer;
             transition: box-shadow 0.1s, filter 0.1s;
@@ -629,14 +630,14 @@
             filter: brightness(1.12);
             box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 0 2px 8px rgba(0, 0, 0, 0.45);
         }
-        /* Timeline bar colors based on HTTP status code ranges */
-        .timeline-bar.status-1xx { background: linear-gradient(90deg, #00838f, #00acc1); }
-        .timeline-bar.status-2xx { background: linear-gradient(90deg, #2e7d32, #66bb6a); }
-        .timeline-bar.status-3xx { background: linear-gradient(90deg, #ef6c00, #ffa726); }
-        .timeline-bar.status-4xx { background: linear-gradient(90deg, #d84315, #ff7043); }
-        .timeline-bar.status-5xx { background: linear-gradient(90deg, #c62828, #ef5350); }
-        .timeline-bar.status-0xx { background: linear-gradient(90deg, #424242, #757575); }
-        .timeline-bar.status-6xx { background: linear-gradient(90deg, #6a1b9a, #ab47bc); }
+        /* Timeline bar colors based on HTTP status code ranges (solid — no gradients) */
+        .timeline-bar.status-1xx { background: #00acc1; }
+        .timeline-bar.status-2xx { background: #2f9e5b; }
+        .timeline-bar.status-3xx { background: #ffa726; }
+        .timeline-bar.status-4xx { background: #ff7043; }
+        .timeline-bar.status-5xx { background: #ef5350; }
+        .timeline-bar.status-0xx { background: #757575; }
+        .timeline-bar.status-6xx { background: #ab47bc; }
         .timeline-bar.selected-start {
             border: 2px solid var(--accent) !important;
             box-shadow: 0 0 0 3px rgba(91, 157, 255, 0.25);
@@ -823,6 +824,8 @@
             overflow-y: auto;
         }
         .empty-state.hidden { display: none; }
+        .empty-state > * { min-width: 0; max-width: 100%; animation: fade-up 0.35s ease-out both; }
+        .empty-state > *:nth-child(2) { animation-delay: 0.08s; }
         .empty-state .empty-title {
             font-size: 26px;
             font-weight: 700;
@@ -854,9 +857,24 @@
             color: var(--text-faint);
             transition: color 0.2s;
         }
-        .drop-zone-icon svg { width: 40px; height: 40px; }
+        .drop-zone-icon svg { width: 40px; height: 40px; overflow: visible; }
         .drop-zone:hover .drop-zone-icon,
-        .drop-zone.drag-over .drop-zone-icon { color: var(--accent); }
+        .drop-zone.drag-over .drop-zone-icon,
+        .drop-zone.loading .drop-zone-icon { color: var(--accent); }
+        .drop-zone-icon .drop-arrow { transition: transform 0.2s ease-out; }
+        .drop-zone:hover .drop-arrow { transform: translateY(-2px); }
+        .drop-zone.drag-over .drop-arrow { animation: drop-bob 0.9s ease-in-out infinite; }
+        .drop-zone.drag-over { transform: scale(1.015); }
+        .drop-zone { transition: border-color 0.2s, background 0.2s, transform 0.2s ease-out; }
+        .drop-zone.loading { pointer-events: none; border-style: solid; border-color: var(--accent); animation: drop-pulse 1.2s ease-in-out infinite; }
+        .drop-zone.loading .drop-arrow { animation: drop-rise 0.9s ease-in-out infinite; }
+        @keyframes drop-bob { 0%, 100% { transform: translateY(2px); } 50% { transform: translateY(-3px); } }
+        @keyframes drop-rise { 0% { transform: translateY(4px); opacity: 0; } 40% { opacity: 1; } 100% { transform: translateY(-5px); opacity: 0; } }
+        @keyframes drop-pulse { 0%, 100% { background: var(--surface); } 50% { background: var(--surface-2); } }
+        @keyframes fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) {
+            .empty-state > *, .drop-zone, .drop-zone .drop-arrow { animation: none !important; transition: none !important; }
+        }
         .drop-zone-text {
             font-size: 15px;
             font-weight: 500;
@@ -864,12 +882,12 @@
             margin-bottom: 4px;
         }
         .drop-zone-subtext { font-size: 12px; color: var(--text-muted); }
-        .drop-zone > div[style*="display: flex"] { justify-content: center; }
+        .drop-zone > div[style*="display: flex"] { justify-content: center; flex-wrap: wrap; }
 
         .select-file-btn {
             height: 36px;
             background: var(--accent);
-            color: var(--accent-contrast);
+            color: #fff;
             border: 1px solid transparent;
             padding: 0 20px;
             border-radius: var(--radius);
@@ -890,6 +908,8 @@
 
         .instructions {
             max-width: 620px;
+            min-width: 0;
+            overflow-wrap: anywhere;
             margin-top: 8px;
             text-align: left;
             color: var(--text-2);
@@ -1467,6 +1487,106 @@
             border-radius: var(--radius);
             border: 1px solid rgba(91, 157, 255, 0.25);
         }
+
+        /* ------------------------------------------------------------------
+           Mobile (≤768px): no shortcut hints, bottom bar keeps legend + zoom
+           slider + Fit; filters / stats / export move into a bottom-sheet menu
+           (the .filter-row itself, toggled by #content.menu-open).
+           ------------------------------------------------------------------ */
+        @media (max-width: 768px) {
+            .instructions-inline,
+            #selBtn,
+            .zoom-controls .zoom-step,
+            #zoomValue,
+            #statsButton,
+            #exportFiddlerBtn,
+            .bottom-right .vertical-separator { display: none !important; }
+
+            body:has(#content.active) .github-link { display: none; }
+
+            .bottom-bar { padding: 8px 12px; gap: 8px; }
+            .bottom-left { width: 100%; }
+            .bottom-right { width: 100%; gap: 8px; }
+            .legend-inline { gap: 6px 12px; }
+            .zoom-controls { flex: 1; min-width: 0; }
+            .zoom-controls input[type="range"] { flex: 1; width: auto; min-width: 0; margin: 0; }
+
+            .mobile-menu-btn { display: inline-flex; position: relative; }
+            .mobile-menu-btn svg { width: 14px; height: 14px; }
+            .mobile-menu-btn.has-filters::after {
+                content: ''; position: absolute; top: -3px; right: -3px;
+                width: 8px; height: 8px; border-radius: 50%;
+                background: var(--accent); box-shadow: 0 0 0 2px var(--surface);
+            }
+
+            #content .filter-row { display: none; }
+            #content.menu-open .filter-row {
+                display: flex;
+                position: fixed;
+                left: 0; right: 0; bottom: 0;
+                max-height: 85vh;
+                overflow-y: auto;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                align-items: stretch;
+                gap: 12px;
+                padding: 0 16px 16px;
+                border: none;
+                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+                box-shadow: var(--shadow-pop);
+                z-index: 1600;
+                animation: sheet-up 0.2s ease-out;
+            }
+            #content.menu-open .mobile-menu-backdrop {
+                display: block;
+                position: fixed; inset: 0;
+                background: rgba(5, 6, 8, 0.6);
+                z-index: 1550;
+            }
+            .filter-row .vertical-separator { display: none !important; }
+            .filter-row .filter-group input,
+            .filter-row .filter-group select { width: 100% !important; font-size: 16px; height: 36px; }
+            .filter-group .uri-input-row .regex-toggle { height: 36px; }
+            .filter-group .duration-inputs input { flex: 1; min-width: 0; }
+            .filter-row .file-input-wrapper,
+            .filter-row .harviewer-link,
+            .filter-row .sticky-picker-wrap,
+            .filter-row #clearFiltersBtn { align-self: flex-start; }
+
+            .mobile-menu-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: sticky; top: 0; z-index: 1;
+                margin: 0 -16px;
+                padding: 12px 16px;
+                background: var(--surface);
+                border-bottom: 1px solid var(--border);
+                font-size: 11px; font-weight: 600;
+                text-transform: uppercase; letter-spacing: 0.08em;
+                color: var(--text-muted);
+            }
+            .mobile-menu-close {
+                width: 32px; height: 32px;
+                background: transparent; border: none; border-radius: var(--radius);
+                color: var(--text-muted); font-size: 20px; cursor: pointer;
+            }
+            .mobile-menu-close:hover { background: var(--surface-3); color: var(--text); }
+            .mobile-menu-actions {
+                display: flex; gap: 8px;
+                padding-top: 12px;
+                border-top: 1px solid var(--border);
+            }
+            .mobile-menu-actions .btn { flex: 1; height: 36px; }
+
+            .stats-popup { left: 12px; right: 12px; bottom: 84px; width: auto; max-width: none; }
+            .measure-panel { bottom: 84px; max-width: calc(100vw - 24px); }
+
+            .empty-state { padding: 40px 16px; gap: 40px; min-height: 100%; }
+            .empty-state .empty-title { font-size: 22px; }
+            .drop-zone { padding: 32px 20px; }
+        }
+        @keyframes sheet-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
     </style>
 </head>
 <body>
@@ -1481,7 +1601,12 @@
         <div id="errorBox" class="error" style="display: none;"></div>
         
         <div id="content">
-            <div class="filter-row">
+            <div class="mobile-menu-backdrop" onclick="toggleMobileMenu(false)"></div>
+            <div class="filter-row" id="filterRow">
+                <div class="mobile-menu-header">
+                    <span>Menu</span>
+                    <button class="mobile-menu-close" onclick="toggleMobileMenu(false)" title="Close menu">×</button>
+                </div>
                 <div class="file-input-wrapper">
                     <input type="file" id="fileInput" accept=".json,.har">
                 </div>
@@ -1544,6 +1669,10 @@
                 </div>
                 <div class="vertical-separator" style="display: none;"></div>
                 <button class="btn" id="clearFiltersBtn" onclick="clearFilters()" style="display: none;">Clear filters</button>
+                <div class="mobile-menu-actions">
+                    <button class="btn" onclick="openStatsFromMenu(event)">Stats</button>
+                    <button class="btn" onclick="toggleMobileMenu(false); openFiddlerExportDialog()">Export Fiddler Rules</button>
+                </div>
             </div>
             
             <div class="table-container" id="timeline"></div>
@@ -1552,7 +1681,7 @@
                 <div class="bottom-left">
                     <div class="legend-inline">
                         <span class="legend-item"><div class="box" style="background: #00acc1;"></div> 1xx</span>
-                        <span class="legend-item"><div class="box" style="background: #66bb6a;"></div> 2xx</span>
+                        <span class="legend-item"><div class="box" style="background: #2f9e5b;"></div> 2xx</span>
                         <span class="legend-item"><div class="box" style="background: #ffa726;"></div> 3xx</span>
                         <span class="legend-item"><div class="box" style="background: #ff7043;"></div> 4xx</span>
                         <span class="legend-item"><div class="box" style="background: #ef5350;"></div> 5xx</span>
@@ -1573,6 +1702,7 @@
                     <div class="vertical-separator"></div>
                     <button class="btn" id="statsButton" style="display: none; margin-right: 8px;">Stats</button>
                     <button class="btn" id="exportFiddlerBtn" onclick="openFiddlerExportDialog()" style="display: none;">Export Fiddler Rules</button>
+                    <button class="btn mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()" title="Filters, stats and export"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h11M2.5 12h11"/></svg>Menu</button>
                 </div>
             </div>
         </div>
@@ -1587,8 +1717,8 @@
                     </div>
                 </div>
                 <div class="drop-zone" id="dropZone">
-                    <div class="drop-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
-                    <div class="drop-zone-text">Drop a HAR or JSON file here</div>
+                    <div class="drop-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><g class="drop-arrow"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/></g><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
+                    <div class="drop-zone-text" id="dropZoneText">Drop a HAR or JSON file here</div>
                     <div class="drop-zone-subtext">or pick one from your computer</div>
                     <input type="file" id="dropZoneFileInput" accept=".json,.har" style="display: none; cursor: pointer;">
                     <div style="display: flex; gap: 10px; margin-top: 15px;">
@@ -2119,9 +2249,12 @@
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
+            toggleMobileMenu(false);
+            setUploadLoading(true);
             
             const reader = new FileReader();
             reader.onload = function(e) {
+                setUploadLoading(false);
                 try {
                     const data = JSON.parse(e.target.result);
                     
@@ -2139,6 +2272,7 @@
                 event.target.value = '';
             };
             reader.onerror = function() {
+                setUploadLoading(false);
                 showError('Failed to read file');
                 event.target.value = '';
             };
@@ -3079,7 +3213,7 @@
                 const rowNum = index + 1;
                 
                 detailsHtml += `
-                    <tr class="request-row"
+                    <tr class="request-row${index % 2 ? ' alt' : ''}"
                         data-id="${req._uid}"
                         data-start="${req.startTs}"
                         data-end="${req.endTs}"
@@ -3107,7 +3241,7 @@
                 const showBadge = displayWidth > 25;
                 
                 timelineHtml += `
-                    <div class="timeline-column" data-id="${req._uid}">
+                    <div class="timeline-column${index % 2 ? ' alt' : ''}" data-id="${req._uid}">
                         <div class="timeline-bar ${req.statusClass} ${isExaggerated ? 'exaggerated' : ''}"
                              style="left: ${leftPx}px; width: ${displayWidth}px;"
                              data-id="${req._uid}"
@@ -4362,6 +4496,8 @@
             if (clearBtn) {
                 clearBtn.style.display = hasFilters ? 'inline-block' : 'none';
             }
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) menuBtn.classList.toggle('has-filters', !!hasFilters);
             
             // Show/hide last separator before clear button
             if (separators.length > 0) {
@@ -5129,9 +5265,48 @@
                 });
         }
         
+        // Drop-zone "reading file" animation state
+        function setUploadLoading(loading) {
+            const dropZone = document.getElementById('dropZone');
+            const text = document.getElementById('dropZoneText');
+            if (!dropZone || !text) return;
+            dropZone.classList.toggle('loading', loading);
+            text.textContent = loading ? 'Reading file…' : 'Drop a HAR or JSON file here';
+        }
+
+        // Mobile bottom-sheet menu (filters / stats / export); only visible ≤768px via CSS
+        function toggleMobileMenu(open) {
+            const content = document.getElementById('content');
+            if (!content) return;
+            content.classList.toggle('menu-open', open === undefined ? !content.classList.contains('menu-open') : open);
+        }
+
+        function openStatsFromMenu(event) {
+            event.stopPropagation();
+            toggleMobileMenu(false);
+            document.getElementById('statsPopup').classList.add('active');
+        }
+
+        // Stats popup is hover-driven on desktop; on touch it's opened from the menu, so close it on outside tap
+        document.addEventListener('click', (e) => {
+            const statsPopup = document.getElementById('statsPopup');
+            if (statsPopup && statsPopup.classList.contains('active') &&
+                !statsPopup.contains(e.target) && !e.target.closest('#statsButton')) {
+                statsPopup.classList.remove('active');
+            }
+        });
+
+        window.matchMedia('(max-width: 768px)').addEventListener('change', (e) => {
+            if (!e.matches) toggleMobileMenu(false);
+        });
+
         document.addEventListener('keydown', e => {
             const isInput = document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA';
             if (e.key === 'Escape') {
+                if (document.getElementById('content').classList.contains('menu-open')) {
+                    toggleMobileMenu(false);
+                    return;
+                }
                 if (document.getElementById('exportDialogBackdrop').classList.contains('active')) {
                     closeFiddlerExportDialog();
                     return;
@@ -5232,8 +5407,10 @@
                     return;
                 }
 
+                setUploadLoading(true);
                 const reader = new FileReader();
                 reader.onload = function(e) {
+                    setUploadLoading(false);
                     try {
                         const data = JSON.parse(e.target.result);
                         // Check if it's a HAR file
@@ -5248,6 +5425,7 @@
                     }
                 };
                 reader.onerror = function() {
+                    setUploadLoading(false);
                     showError('Failed to read file');
                 };
                 reader.readAsText(file);
